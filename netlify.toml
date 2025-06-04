@@ -1,0 +1,19 @@
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_API_URL = "https://mvt-analytics-production.up.railway.app"
+  VITE_SUPABASE_URL = "https://vwdfpdijvtbmnwachlzx.supabase.co"
+  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ3ZGZwZGlqdnRibW53YWNobHp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzMxOTQ5OTYsImV4cCI6MjA0ODc3MDk5Nn0.5Ni0h0Rw8cVfSN_c_Bxay0SgfN7r9Wl98HPZyUNxTtA"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://mvt-analytics-production.up.railway.app/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 
