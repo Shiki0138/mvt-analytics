@@ -1,18 +1,15 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# 最小限の依存関係のみ
-RUN apk add --no-cache postgresql-libs && \
-    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
-    pip install --no-cache-dir fastapi uvicorn asyncpg sqlalchemy pydantic python-dotenv httpx && \
-    apk --purge del .build-deps
+# 最小限の依存関係
+RUN pip install fastapi uvicorn
 
-# アプリケーションコード
-COPY . .
+# アプリケーションファイル
+COPY main.py .
 
-# 環境変数
-ENV PORT=8000
+# ポート設定
+EXPOSE 8000
 
-# 起動
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT 
+# 起動コマンド（Railwayに最適化）
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] 
