@@ -4,14 +4,16 @@ dockerfilePath = "backend/Dockerfile"
 dockerContext = "backend"
 
 [deploy]
-startCommand = "python -m uvicorn main:app --host 0.0.0.0 --port $PORT"
+startCommand = ""
 
-# 環境変数
+# 環境変数（Gunicorn用）
 [env]
 DATABASE_URL = "${{DATABASE_URL}}"
 SUPABASE_URL = "${{SUPABASE_URL}}"
 SUPABASE_ANON_KEY = "${{SUPABASE_ANON_KEY}}"
 PORT = "8000"
+MODULE_NAME = "main"
+VARIABLE_NAME = "app"
 
 # バックエンドサービス設定
 [[services]]
