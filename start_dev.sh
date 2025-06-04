@@ -1,44 +1,50 @@
 #!/bin/bash
 
-echo "🚀 Starting MVT Analytics Development Environment"
-echo "==============================================="
+echo "🚀 MVT Analytics 開発環境を起動中..."
 
-# Function to kill background processes on exit
-cleanup() {
-    echo "Shutting down development servers..."
-    kill $(jobs -p) 2>/dev/null
-    exit
-}
+# 既存のプロセスを停止
+echo "📝 既存のプロセスを停止中..."
+pkill -f "python.*main.py" 2>/dev/null || true
+pkill -f "vite" 2>/dev/null || true
 
-# Set up signal handlers
-trap cleanup SIGINT SIGTERM
-
-# Start backend in background
-echo "🔧 Starting Backend Server..."
+# バックエンドを起動
+echo "🔧 バックエンドサーバーを起動中..."
 cd backend
 source venv/bin/activate
-DATABASE_URL="sqlite:///mvt_analytics.db" python main.py &
+python main.py &
 BACKEND_PID=$!
 cd ..
 
-# Wait a moment for backend to start
+# 少し待機
 sleep 3
 
-# Start frontend in background
-echo "🎨 Starting Frontend Server..."
+# バックエンドの動作確認
+echo "✅ バックエンドAPIの動作確認中..."
+curl -s http://localhost:8000/ > /dev/null
+if [ $? -eq 0 ]; then
+    echo "✅ バックエンドAPI: http://localhost:8000/ - 正常"
+else
+    echo "❌ バックエンドAPIが応答しません"
+fi
+
+# フロントエンドを起動
+echo "🎨 フロントエンドサーバーを起動中..."
 cd frontend
 npm run dev &
 FRONTEND_PID=$!
 cd ..
 
-# Show status
 echo ""
-echo "✅ Development servers started!"
-echo "📱 Frontend: http://localhost:5173"
-echo "🔧 Backend:  http://localhost:8000"
-echo "🌐 Railway:  https://mvt-analytics-production.up.railway.app"
+echo "🎉 開発環境が起動しました！"
 echo ""
-echo "Press Ctrl+C to stop all servers"
+echo "📱 フロントエンド: http://localhost:5173/"
+echo "🔧 バックエンドAPI: http://localhost:8000/"
+echo ""
+echo "停止するには Ctrl+C を押してください"
+echo ""
 
-# Wait for user to stop
+# プロセス監視
+trap 'echo "🛑 開発環境を停止中..."; kill $BACKEND_PID 2>/dev/null; kill $FRONTEND_PID 2>/dev/null; exit' INT
+
+# 待機
 wait 

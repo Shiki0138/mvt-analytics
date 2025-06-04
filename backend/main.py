@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -22,22 +23,29 @@ def init_db():
     conn = sqlite3.connect('mvt_analytics.db')
     cursor = conn.cursor()
     
-    # プロジェクトテーブル
+    # 既存テーブルを削除（完全リセット）
+    cursor.execute('DROP TABLE IF EXISTS projects')
+    
+    # プロジェクトテーブル（拡張版）
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS projects (
+    CREATE TABLE projects (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        industry_type TEXT DEFAULT 'beauty',
+        target_area TEXT,
+        status TEXT DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     ''')
     
-    # サンプルデータ挿入
+    # サンプルデータ挿入（拡張版）
     cursor.execute('''
-    INSERT OR IGNORE INTO projects (id, name, description) VALUES 
-    (1, 'サンプル美容室', '渋谷区の美容室事業プロジェクト'),
-    (2, 'カフェプロジェクト', '新宿区のカフェ事業計画'),
-    (3, 'フィットネスジム', '池袋区のフィットネス事業')
+    INSERT INTO projects (id, name, description, industry_type, target_area, status) VALUES 
+    (1, 'サンプル美容室', '渋谷区の美容室事業プロジェクト', 'beauty', '渋谷区', 'active'),
+    (2, 'カフェプロジェクト', '新宿区のカフェ事業計画', 'restaurant', '新宿区', 'completed'),
+    (3, 'フィットネスジム', '池袋区のフィットネス事業', 'healthcare', '池袋区', 'active')
     ''')
     
     conn.commit()
@@ -46,12 +54,16 @@ def init_db():
 # 起動時にDB初期化
 init_db()
 
-# データモデル
+# データモデル（拡張版）
 class Project(BaseModel):
     id: Optional[int] = None
     name: str
     description: Optional[str] = None
+    industry_type: str = 'beauty'
+    target_area: Optional[str] = None
+    status: str = 'active'
     created_at: Optional[str] = None
+    updated_at: Optional[str] = None
 
 class Simulation(BaseModel):
     id: Optional[int] = None
@@ -74,37 +86,45 @@ def read_root():
 def health():
     return {"status": "ok", "service": "mvt-analytics", "timestamp": datetime.now().isoformat()}
 
-# プロジェクト API
+# プロジェクト API（完全版）
 @app.get("/api/projects")
 def get_projects():
     conn = sqlite3.connect('mvt_analytics.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, description, created_at FROM projects")
+    cursor.execute("SELECT id, name, description, industry_type, target_area, status, created_at, updated_at FROM projects")
     projects = []
     for row in cursor.fetchall():
         projects.append({
-            "id": row[0],
+            "id": str(row[0]),
             "name": row[1],
             "description": row[2],
-            "created_at": row[3]
+            "industry_type": row[3],
+            "target_area": row[4],
+            "status": row[5],
+            "created_at": row[6],
+            "updated_at": row[7]
         })
     conn.close()
-    return {"projects": projects}
+    return projects
 
 @app.get("/api/projects/{project_id}")
 def get_project(project_id: int):
     conn = sqlite3.connect('mvt_analytics.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, description, created_at FROM projects WHERE id = ?", (project_id,))
+    cursor.execute("SELECT id, name, description, industry_type, target_area, status, created_at, updated_at FROM projects WHERE id = ?", (project_id,))
     row = cursor.fetchone()
     conn.close()
     
     if row:
         return {
-            "id": row[0],
+            "id": str(row[0]),
             "name": row[1],
             "description": row[2],
-            "created_at": row[3]
+            "industry_type": row[3],
+            "target_area": row[4],
+            "status": row[5],
+            "created_at": row[6],
+            "updated_at": row[7]
         }
     raise HTTPException(status_code=404, detail="Project not found")
 
@@ -113,13 +133,44 @@ def create_project(project: Project):
     conn = sqlite3.connect('mvt_analytics.db')
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT INTO projects (name, description) VALUES (?, ?)",
-        (project.name, project.description)
+        "INSERT INTO projects (name, description, industry_type, target_area, status) VALUES (?, ?, ?, ?, ?)",
+        (project.name, project.description, project.industry_type, project.target_area, project.status)
     )
     project_id = cursor.lastrowid
     conn.commit()
     conn.close()
     return {"id": project_id, "message": "Project created successfully"}
+
+@app.put("/api/projects/{project_id}")
+def update_project(project_id: int, project: Project):
+    conn = sqlite3.connect('mvt_analytics.db')
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE projects SET name = ?, description = ?, industry_type = ?, target_area = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        (project.name, project.description, project.industry_type, project.target_area, project.status, project_id)
+    )
+    
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    conn.commit()
+    conn.close()
+    return {"message": "Project updated successfully"}
+
+@app.delete("/api/projects/{project_id}")
+def delete_project(project_id: int):
+    conn = sqlite3.connect('mvt_analytics.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM projects WHERE id = ?", (project_id,))
+    
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Project not found")
+    
+    conn.commit()
+    conn.close()
+    return {"message": "Project deleted successfully"}
 
 # シミュレーション API
 @app.get("/api/projects/{project_id}/simulations")
