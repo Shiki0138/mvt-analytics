@@ -1,25 +1,18 @@
-FROM python:3.11-slim
+FROM python:3.11-alpine
 
-# ワーキングディレクトリ
 WORKDIR /app
 
-# システム依存関係（最小限のみ）
-RUN apt-get update && apt-get install -y \
-    libpq5 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# 最小限の依存関係のみ
+RUN apk add --no-cache postgresql-libs && \
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+    pip install --no-cache-dir fastapi uvicorn asyncpg sqlalchemy pydantic python-dotenv httpx && \
+    apk --purge del .build-deps
 
-# Python依存関係を先にコピー・インストール（レイヤーキャッシュ最適化）
-COPY requirements_minimal.txt .
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements_minimal.txt
-
-# アプリケーションファイル
+# アプリケーションコード
 COPY . .
 
-# Railway用のポート設定
+# 環境変数
 ENV PORT=8000
-EXPOSE $PORT
 
-# Railway用の起動コマンド
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port $PORT"] 
+# 起動
+CMD uvicorn main:app --host 0.0.0.0 --port $PORT 
