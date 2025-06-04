@@ -2,8 +2,14 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11-slim
 
 WORKDIR /app
 
-# アプリケーションファイル
-COPY ./main.py /app/
+# 依存関係をコピーしてインストール
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
-# FastAPIが事前インストール済みなので追加設定不要
-# ポートはGunicornが自動設定 
+# アプリケーションファイルをコピー
+COPY main.py /app/
+
+# ポート8000で実行
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] 
