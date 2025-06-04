@@ -3,39 +3,27 @@ from typing import Optional
 import os
 
 class Settings(BaseSettings):
-    # Database
-    database_url: str = "postgresql://user:password@localhost/mvt_analytics"
+    # Database - Railway/Supabase対応
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./mvt_analytics.db")
     
-    # API Keys
+    # Supabase Settings
+    supabase_url: Optional[str] = os.getenv("SUPABASE_URL")
+    supabase_anon_key: Optional[str] = os.getenv("SUPABASE_ANON_KEY")
+    
+    # API Keys (オプション - MVP版では不要)
     estat_api_key: Optional[str] = None
     resas_api_key: Optional[str] = None
     google_places_api_key: Optional[str] = None
-    openrouteservice_api_key: Optional[str] = None
-    mapbox_api_key: Optional[str] = None
     
-    # API Rate Limits (requests per minute)
-    estat_rate_limit: int = 1200  # 20 req/s * 60
-    resas_rate_limit: int = 300   # 5 req/s * 60
-    nominatim_rate_limit: int = 60  # 1 req/s * 60
-    openrouteservice_rate_limit: int = 120  # 2500/day ≈ 2 req/s
-    google_places_rate_limit: int = 300
+    # Simplified rate limits
+    rate_limit_default: int = 60  # 1 req/s
     
-    # Cache Settings
-    cache_ttl_demographics: int = 86400 * 30  # 30 days
-    cache_ttl_competitors: int = 86400  # 1 day
-    cache_ttl_isochrone: int = 86400 * 7  # 7 days
+    # Cache Settings (軽量)
+    cache_ttl_default: int = 3600  # 1 hour
     
-    # CPA/CVR Default Values (業界平均)
-    default_cpa_google_ads: float = 3000.0
-    default_cpa_facebook_ads: float = 2500.0
-    default_cpa_instagram_ads: float = 2800.0
-    default_cvr_beauty: float = 0.03  # 美容業界平均
-    default_cvr_restaurant: float = 0.05  # 飲食業界平均
-    default_cvr_retail: float = 0.02  # 小売業界平均
-    
-    # Geographic Settings
-    default_isochrone_minutes: int = 15
-    default_mesh_size: int = 500  # meters
+    # Default Values
+    default_cpa: float = 3000.0
+    default_cvr: float = 0.03
     
     class Config:
         env_file = ".env"
