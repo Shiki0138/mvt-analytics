@@ -3,11 +3,11 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 依存関係をコピーしてインストール
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリケーションコードをコピー
-COPY . .
+COPY backend/main.py .
 
 # ポート8000で実行
 EXPOSE 8000
