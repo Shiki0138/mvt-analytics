@@ -5,8 +5,8 @@ WORKDIR /app
 # 最小限の依存関係
 RUN pip install fastapi uvicorn
 
-# アプリケーションファイル
-COPY main.py .
+# アプリケーションファイル（相対パス明示）
+COPY ./main.py .
 
 # ポート設定
 EXPOSE 8000
