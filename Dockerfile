@@ -1,11 +1,15 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# バックエンドのmain.pyをコピー
+# 必要なパッケージをインストール
+RUN pip install fastapi uvicorn
+
+# アプリケーションファイルをコピー
 COPY backend/main.py /app/main.py
 
-# 環境変数設定
-ENV MODULE_NAME=main
-ENV VARIABLE_NAME=app
-ENV PORT=8000 
+# ポート設定
+EXPOSE 8000
+
+# 明示的な起動コマンド
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"] 
