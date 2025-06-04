@@ -4,15 +4,15 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World", "service": "MVT Analytics"}
+    return {"message": "Hello World", "status": "working"}
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok", "service": "mvt-analytics"}
 
-@app.get("/api/health")
-async def api_health():
-    return {"status": "healthy", "service": "mvt-analytics"}
+@app.get("/test")
+def test():
+    return {"test": "success", "timestamp": "2024-06-04"}
 
 if __name__ == "__main__":
     import uvicorn
