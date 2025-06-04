@@ -1,0 +1,27 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+startCommand = "echo 'Railway deploy configured'"
+
+# バックエンドサービス設定
+[[services]]
+name = "backend"
+source = "backend/"
+dockerfile = "backend/Dockerfile"
+
+[services.env]
+DATABASE_URL = "${{Postgres.DATABASE_URL}}"
+SUPABASE_URL = "${{SUPABASE_URL}}"
+SUPABASE_ANON_KEY = "${{SUPABASE_ANON_KEY}}"
+
+# フロントエンドサービス設定  
+[[services]]
+name = "frontend"
+source = "frontend/"
+dockerfile = "frontend/Dockerfile"
+
+[services.env]
+VITE_API_URL = "${{BACKEND_URL}}"
+VITE_SUPABASE_URL = "${{SUPABASE_URL}}"
+VITE_SUPABASE_ANON_KEY = "${{SUPABASE_ANON_KEY}}" 

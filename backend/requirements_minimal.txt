@@ -1,0 +1,19 @@
+# Web Framework (必須)
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+python-multipart>=0.0.5
+
+# Database (必須)
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# Configuration (必須)
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# API Client (必須)
+httpx>=0.24.0
+
+# Data Analysis (コア機能)
+pandas>=1.5.0
+numpy>=1.20.0 
