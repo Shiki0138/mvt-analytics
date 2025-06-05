@@ -63,28 +63,29 @@ else
     fi
 fi
 
-# Step 3: GitHub Actions の実行確認
+# Step 3: デプロイ確認
 echo ""
-echo "⏳ Step 3: GitHub Actions CI/CD 確認中..."
-echo "   🔄 自動テスト & デプロイが実行中です..."
-echo "   📱 進行状況: https://github.com/Shiki0138/mvt-analytics/actions"
+echo "🎯 Step 3: デプロイ確認中..."
 
-# Step 4: デプロイ完了まで待機（簡易版）
-echo ""
-echo "🎯 Step 4: デプロイ確認..."
-echo "   ⏱️  デプロイ完了まで約2-3分お待ちください..."
-
-# 30秒後にヘルスチェック
-sleep 30
-echo "   🩺 Railway API ヘルスチェック..."
-
-if curl -s https://mvt-analytics-production.up.railway.app/ | grep -q "MVT Analytics API"; then
-    echo "   ✅ Railway (バックエンド): デプロイ成功"
+# Railway APIヘルスチェック
+echo "   🚂 Railway (バックエンド) 確認中..."
+RAILWAY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://mvt-analytics-production.up.railway.app/health)
+if [ "$RAILWAY_STATUS" = "200" ]; then
+    echo "   ✅ Railway: 正常稼働中"
 else
-    echo "   ⏳ Railway (バックエンド): まだデプロイ中..."
+    echo "   ⚠️ Railway: 応答コード $RAILWAY_STATUS"
 fi
 
-# Step 5: 完了通知
+# Vercelデプロイ確認
+echo "   ⚡ Vercel (フロントエンド) 確認中..."
+VERCEL_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://mvtanalytics.vercel.app)
+if [ "$VERCEL_STATUS" = "200" ]; then
+    echo "   ✅ Vercel: 正常稼働中"
+else
+    echo "   ⚠️ Vercel: 応答コード $VERCEL_STATUS"
+fi
+
+# 完了通知
 echo ""
 echo "=================================================="
 echo "🎉 自動デプロイプロセス完了！"
@@ -93,9 +94,10 @@ echo "🔗 アクセスURL:"
 echo "   🌐 Frontend: https://mvtanalytics.vercel.app/"
 echo "   📡 Backend:  https://mvt-analytics-production.up.railway.app/"
 echo ""
-echo "📊 GitHub Actions: https://github.com/Shiki0138/mvt-analytics/actions"
-echo "🔧 Railway Dashboard: https://railway.app/"
-echo "⚡ Vercel Dashboard: https://vercel.com/"
+echo "📊 モニタリング:"
+echo "   🔄 GitHub Actions: https://github.com/Shiki0138/mvt-analytics/actions"
+echo "   ⚡ Vercel Dashboard: https://vercel.com/dashboard"
+echo "   🚂 Railway Dashboard: https://railway.app/"
 echo ""
 echo "✅ 全システム稼働中！"
 echo "==================================================" 
