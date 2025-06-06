@@ -1,38 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import {
   Box,
-  Typography,
+  Container,
+  Grid,
   Card,
   CardContent,
-  Grid,
-  Tabs,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Typography,
+  Button,
   Chip,
-  LinearProgress,
+  CircularProgress,
   Alert,
   Stack,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField
+  Divider,
+  LinearProgress,
+  IconButton,
+  Tooltip,
+  Tab,
+  Tabs
 } from '@mui/material'
 import {
-  LocationOn as LocationIcon,
+  Assessment as AssessmentIcon,
+  ArrowBack as ArrowBackIcon,
   Business as BusinessIcon,
-  TrendingUp as TrendingUpIcon,
+  LocationOn as LocationOnIcon,
   People as PeopleIcon,
+  TrendingUp as TrendingUpIcon,
   Store as StoreIcon,
-  Analytics as AnalyticsIcon
+  Timeline as TimelineIcon,
+  Save as SaveIcon,
+  Refresh as RefreshIcon,
+  Download as DownloadIcon
 } from '@mui/icons-material'
 
 interface TabPanelProps {
@@ -43,7 +41,7 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props
-  
+
   return (
     <div
       role="tabpanel"
@@ -52,457 +50,769 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`analysis-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
+      {value === index && (
+        <Box sx={{ py: 3 }}>
+          {children}
+        </Box>
+      )}
     </div>
   )
 }
 
+interface AnalysisResult {
+  type: 'demographics' | 'competitors' | 'demand'
+  status: 'completed' | 'processing' | 'failed'
+  completed_at?: string
+  data: any
+}
+
 function Analysis() {
   const { projectId } = useParams()
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [project, setProject] = useState<any>(null)
   const [tabValue, setTabValue] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [analysisRadius, setAnalysisRadius] = useState(1000) // メートル
-  const [targetAge, setTargetAge] = useState('all')
+  const [analyzing, setAnalyzing] = useState(false)
+  const [results, setResults] = useState<{ [key: string]: AnalysisResult }>({})
 
-  // モックデータ
-  const demographicsData = {
-    totalPopulation: 45823,
-    ageGroups: [
-      { range: '20-29歳', count: 8245, percentage: 18.0 },
-      { range: '30-39歳', count: 9876, percentage: 21.5 },
-      { range: '40-49歳', count: 12456, percentage: 27.2 },
-      { range: '50-59歳', count: 8932, percentage: 19.5 },
-      { range: '60歳以上', count: 6314, percentage: 13.8 }
-    ],
-    households: 23456,
-    averageIncome: 5680000,
-    workingPopulation: 34567
-  }
+  useEffect(() => {
+    fetchProjectData()
+  }, [projectId])
 
-  const competitorData = [
-    {
-      id: 1,
-      name: 'ヘアサロン ABC',
-      category: '美容室',
-      distance: 350,
-      rating: 4.2,
-      reviews: 145,
-      priceRange: '¥4,000-8,000',
-      features: ['カット', 'カラー', 'パーマ']
-    },
-    {
-      id: 2,
-      name: 'ビューティーサロン XYZ',
-      category: '美容室',
-      distance: 580,
-      rating: 4.5,
-      reviews: 203,
-      priceRange: '¥5,000-12,000',
-      features: ['カット', 'カラー', 'トリートメント', 'ヘッドスパ']
-    },
-    {
-      id: 3,
-      name: 'カットハウス 123',
-      category: '理容室',
-      distance: 420,
-      rating: 3.8,
-      reviews: 89,
-      priceRange: '¥2,500-4,000',
-      features: ['カット', 'シェービング']
+  const fetchProjectData = async () => {
+    try {
+      const response = await fetch(`/api/projects/${projectId}`)
+      const data = await response.json()
+      setProject(data)
+
+      // 分析結果の取得
+      const analysisResponse = await fetch(`/api/projects/${projectId}/analyses`)
+      const analysisData = await analysisResponse.json()
+      setResults(analysisData.results || {})
+    } catch (err) {
+      setError('プロジェクト情報の取得に失敗しました')
+      console.error('データ取得エラー:', err)
+    } finally {
+      setLoading(false)
     }
-  ]
-
-  const demandData = {
-    marketSize: 890000000, // 年間市場規模（円）
-    growthRate: 2.3, // 年間成長率（%）
-    seasonality: [
-      { month: '1月', demand: 85 },
-      { month: '2月', demand: 78 },
-      { month: '3月', demand: 110 },
-      { month: '4月', demand: 105 },
-      { month: '5月', demand: 92 },
-      { month: '6月', demand: 88 },
-      { month: '7月', demand: 95 },
-      { month: '8月', demand: 102 },
-      { month: '9月', demand: 98 },
-      { month: '10月', demand: 108 },
-      { month: '11月', demand: 115 },
-      { month: '12月', demand: 125 }
-    ],
-    keywordTrends: [
-      { keyword: '美容室 渋谷', volume: 12400, trend: 'up' },
-      { keyword: 'ヘアカット 渋谷', volume: 8900, trend: 'stable' },
-      { keyword: 'ヘアカラー 渋谷', volume: 6700, trend: 'up' },
-      { keyword: 'パーマ 渋谷', volume: 3400, trend: 'down' }
-    ]
   }
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue)
   }
 
-  const runAnalysis = async () => {
-    setLoading(true)
-    // 実際の分析処理をシミュレート
-    setTimeout(() => {
-      setLoading(false)
-    }, 2000)
+  const startAnalysis = async (type: 'demographics' | 'competitors' | 'demand') => {
+    setAnalyzing(true)
+    try {
+      const response = await fetch(`/api/projects/${projectId}/analyze`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type }),
+      })
+
+      if (!response.ok) {
+        throw new Error('分析の開始に失敗しました')
+      }
+
+      // 分析開始を反映
+      setResults(prev => ({
+        ...prev,
+        [type]: {
+          type,
+          status: 'processing',
+          data: null
+        }
+      }))
+
+      // 分析完了までポーリング
+      const pollResult = async () => {
+        const pollResponse = await fetch(`/api/projects/${projectId}/analyses/${type}`)
+        const result = await pollResponse.json()
+
+        if (result.status === 'completed') {
+          setResults(prev => ({
+            ...prev,
+            [type]: result
+          }))
+          return true
+        }
+        return false
+      }
+
+      // 実際のAPIが実装されるまでのモック
+      setTimeout(() => {
+        const mockResults = {
+          demographics: {
+            type: 'demographics',
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+            data: {
+              total_population: 45823,
+              target_population: 12500,
+              age_groups: {
+                '20-29': 0.15,
+                '30-39': 0.25,
+                '40-49': 0.22,
+                '50-59': 0.20,
+                '60+': 0.18
+              },
+              gender_ratio: {
+                male: 0.48,
+                female: 0.52
+              },
+              income_levels: {
+                low: 0.25,
+                medium: 0.45,
+                high: 0.30
+              },
+              household_types: {
+                single: 0.35,
+                couple: 0.25,
+                family: 0.40
+              }
+            }
+          },
+          competitors: {
+            type: 'competitors',
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+            data: {
+              total_competitors: 12,
+              direct_competitors: 5,
+              indirect_competitors: 7,
+              market_share: {
+                leader: 0.25,
+                second: 0.20,
+                others: 0.55
+              },
+              price_range: {
+                min: 3000,
+                max: 15000,
+                average: 8000
+              },
+              competitor_strengths: [
+                { name: '集客力', score: 4.2 },
+                { name: 'サービス品質', score: 3.8 },
+                { name: '価格競争力', score: 3.5 },
+                { name: 'ブランド認知度', score: 4.0 }
+              ]
+            }
+          },
+          demand: {
+            type: 'demand',
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+            data: {
+              market_size: 890000000,
+              growth_rate: 0.05,
+              seasonality: {
+                spring: 1.1,
+                summer: 0.9,
+                autumn: 1.0,
+                winter: 1.2
+              },
+              demand_factors: [
+                { factor: '人口増加', impact: 'positive', strength: 0.8 },
+                { factor: '消費者嗜好', impact: 'positive', strength: 0.7 },
+                { factor: '経済状況', impact: 'neutral', strength: 0.5 }
+              ],
+              forecast: {
+                optimistic: 1000000000,
+                realistic: 890000000,
+                pessimistic: 780000000
+              }
+            }
+          }
+        }
+
+        setResults(prev => ({
+          ...prev,
+          [type]: mockResults[type as keyof typeof mockResults]
+        }))
+      }, 2000)
+
+    } catch (err) {
+      setError('分析の開始に失敗しました')
+      console.error('分析開始エラー:', err)
+    } finally {
+      setAnalyzing(false)
+    }
   }
 
-  const formatCurrency = (amount: number) => `¥${amount.toLocaleString()}`
-  const formatNumber = (num: number) => num.toLocaleString()
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ja-JP')
+  }
 
-  return (
-    <Box>
-      {/* ヘッダー */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h1" gutterBottom>
-            商圏・競合・需要分析
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {projectId ? `プロジェクトID: ${projectId}` : '地域市場の詳細分析'}
-          </Typography>
-        </Box>
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(amount)
+  }
+
+  const formatPercentage = (value: number) => {
+    return `${(value * 100).toFixed(1)}%`
+  }
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ ml: 2 }}>
+          プロジェクト情報を読み込み中...
+        </Typography>
+      </Box>
+    )
+  }
+
+  if (!project) {
+    return (
+      <Box sx={{ textAlign: 'center', py: 4 }}>
+        <Typography variant="h5" color="error">
+          プロジェクトが見つかりません
+        </Typography>
         <Button
           variant="contained"
-          startIcon={<AnalyticsIcon />}
-          onClick={runAnalysis}
-          disabled={loading}
+          onClick={() => navigate('/projects')}
+          startIcon={<ArrowBackIcon />}
+          sx={{ mt: 2 }}
         >
-          {loading ? '分析中...' : '分析実行'}
+          プロジェクト一覧に戻る
         </Button>
       </Box>
+    )
+  }
 
-      {/* 分析条件設定 */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            分析条件
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={4}>
-              <TextField
-                label="分析半径"
-                type="number"
-                value={analysisRadius}
-                onChange={(e) => setAnalysisRadius(Number(e.target.value))}
-                InputProps={{ endAdornment: 'メートル' }}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
-                <InputLabel>ターゲット年齢層</InputLabel>
-                <Select
-                  value={targetAge}
-                  onChange={(e) => setTargetAge(e.target.value)}
-                >
-                  <MenuItem value="all">全年齢</MenuItem>
-                  <MenuItem value="20-29">20-29歳</MenuItem>
-                  <MenuItem value="30-39">30-39歳</MenuItem>
-                  <MenuItem value="40-49">40-49歳</MenuItem>
-                  <MenuItem value="50-59">50-59歳</MenuItem>
-                  <MenuItem value="60+">60歳以上</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Alert severity="info" sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-                MVP版はモックデータを表示
-              </Alert>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+  return (
+    <Container maxWidth="lg">
+      {/* ヘッダー */}
+      <Box sx={{ mb: 4 }}>
+        <Button
+          variant="text"
+          onClick={() => navigate(`/projects/${projectId}`)}
+          startIcon={<ArrowBackIcon />}
+          sx={{ mb: 2 }}
+        >
+          プロジェクト詳細に戻る
+        </Button>
 
-      {loading && (
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>分析処理中...</Typography>
-            <LinearProgress />
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              e-Stat、RESAS、Nominatim等のAPIからデータを取得しています
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <Box>
+            <Typography variant="h4" gutterBottom>
+              市場分析
             </Typography>
-          </CardContent>
-        </Card>
+            <Typography variant="body1" color="text.secondary" gutterBottom>
+              {project.name}
+            </Typography>
+            <Stack direction="row" spacing={1}>
+              <Chip
+                icon={<BusinessIcon />}
+                label={project.industry_type}
+                variant="outlined"
+                size="small"
+              />
+              <Chip
+                icon={<LocationOnIcon />}
+                label={project.target_area}
+                variant="outlined"
+                size="small"
+              />
+            </Stack>
+          </Box>
+          <Box>
+            <Button
+              variant="contained"
+              startIcon={<SaveIcon />}
+              onClick={() => {/* TODO: 分析結果の保存 */}}
+              disabled={!Object.keys(results).length}
+              sx={{ mr: 1 }}
+            >
+              分析結果を保存
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
       )}
 
-      {/* 分析タブ */}
-      <Card>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={handleTabChange}>
-            <Tab 
-              label="商圏人口分析" 
-              icon={<PeopleIcon />} 
-              iconPosition="start"
-            />
-            <Tab 
-              label="競合店舗分析" 
-              icon={<StoreIcon />} 
-              iconPosition="start"
-            />
-            <Tab 
-              label="需要・トレンド分析" 
-              icon={<TrendingUpIcon />} 
-              iconPosition="start"
-            />
-          </Tabs>
-        </Box>
+      {/* タブナビゲーション */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={tabValue} onChange={handleTabChange}>
+          <Tab label="商圏分析" />
+          <Tab label="競合分析" />
+          <Tab label="需要予測" />
+        </Tabs>
+      </Box>
 
-        {/* 商圏人口分析 */}
-        <TabPanel value={tabValue} index={0}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Stack spacing={3}>
-                <Box>
-                  <Typography variant="h6" gutterBottom>
-                    人口統計サマリー
-                  </Typography>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Typography variant="h4" color="primary">
-                            {formatNumber(demographicsData.totalPopulation)}
-                          </Typography>
-                          <Typography variant="caption">総人口</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Typography variant="h4" color="secondary">
-                            {formatNumber(demographicsData.households)}
-                          </Typography>
-                          <Typography variant="caption">世帯数</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Typography variant="h4" color="info.main">
-                            {formatCurrency(demographicsData.averageIncome)}
-                          </Typography>
-                          <Typography variant="caption">平均年収</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Card variant="outlined">
-                        <CardContent>
-                          <Typography variant="h4" color="success.main">
-                            {formatNumber(demographicsData.workingPopulation)}
-                          </Typography>
-                          <Typography variant="caption">就業人口</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Stack>
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
-                年齢層分布
+      {/* 商圏分析タブ */}
+      <TabPanel value={tabValue} index={0}>
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h6">
+                商圏人口分析
               </Typography>
-              <TableContainer>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>年齢層</TableCell>
-                      <TableCell align="right">人口</TableCell>
-                      <TableCell align="right">割合</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {demographicsData.ageGroups.map((group) => (
-                      <TableRow key={group.range}>
-                        <TableCell>{group.range}</TableCell>
-                        <TableCell align="right">{formatNumber(group.count)}</TableCell>
-                        <TableCell align="right">{group.percentage}%</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
-        </TabPanel>
+              <Button
+                variant="contained"
+                startIcon={<PeopleIcon />}
+                onClick={() => startAnalysis('demographics')}
+                disabled={analyzing || results.demographics?.status === 'processing'}
+              >
+                分析を実行
+              </Button>
+            </Box>
 
-        {/* 競合店舗分析 */}
-        <TabPanel value={tabValue} index={1}>
-          <Typography variant="h6" gutterBottom>
-            周辺競合店舗（{analysisRadius}m以内）
-          </Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>店舗名</TableCell>
-                  <TableCell>カテゴリ</TableCell>
-                  <TableCell align="right">距離</TableCell>
-                  <TableCell align="center">評価</TableCell>
-                  <TableCell>価格帯</TableCell>
-                  <TableCell>特徴</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {competitorData.map((competitor) => (
-                  <TableRow key={competitor.id}>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <BusinessIcon fontSize="small" />
-                        {competitor.name}
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Chip 
-                        label={competitor.category}
-                        size="small"
-                        color={competitor.category === '美容室' ? 'primary' : 'default'}
-                      />
-                    </TableCell>
-                    <TableCell align="right">{competitor.distance}m</TableCell>
-                    <TableCell align="center">
-                      <Box>
-                        <Typography variant="body2" fontWeight="bold">
-                          ★{competitor.rating}
-                        </Typography>
-                        <Typography variant="caption">
-                          ({competitor.reviews}件)
-                        </Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>{competitor.priceRange}</TableCell>
-                    <TableCell>
-                      <Stack direction="row" spacing={0.5} flexWrap="wrap">
-                        {competitor.features.map((feature) => (
-                          <Chip key={feature} label={feature} size="small" variant="outlined" />
-                        ))}
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <Alert severity="warning" sx={{ mt: 2 }}>
-            競合店舗データは Google Places API（MVP版ではモック）を使用しています
-          </Alert>
-        </TabPanel>
-
-        {/* 需要・トレンド分析 */}
-        <TabPanel value={tabValue} index={2}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
-                市場規模・成長率
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
+            {results.demographics?.status === 'processing' ? (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <CircularProgress size={40} />
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  商圏データを分析中...
+                </Typography>
+              </Box>
+            ) : results.demographics?.status === 'completed' ? (
+              <Grid container spacing={3}>
+                {/* 基本情報 */}
+                <Grid item xs={12} md={6}>
                   <Card variant="outlined">
                     <CardContent>
-                      <Typography variant="h4" color="primary">
-                        {formatCurrency(demandData.marketSize)}
+                      <Typography variant="subtitle1" gutterBottom>
+                        商圏人口概要
                       </Typography>
-                      <Typography variant="caption">年間市場規模</Typography>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="h4" color="primary">
+                          {results.demographics.data.total_population.toLocaleString()}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          総人口
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="h5" color="secondary">
+                          {results.demographics.data.target_population.toLocaleString()}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          ターゲット層人口
+                        </Typography>
+                      </Box>
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
+
+                {/* 年齢構成 */}
+                <Grid item xs={12} md={6}>
                   <Card variant="outlined">
                     <CardContent>
-                      <Typography variant="h4" color="success.main">
-                        +{demandData.growthRate}%
+                      <Typography variant="subtitle1" gutterBottom>
+                        年齢構成
                       </Typography>
-                      <Typography variant="caption">年間成長率</Typography>
+                      {Object.entries(results.demographics.data.age_groups).map(([age, ratio]) => (
+                        <Box key={age} sx={{ mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">{age}歳</Typography>
+                            <Typography variant="body2">{formatPercentage(ratio as number)}</Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(ratio as number) * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 世帯タイプ */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        世帯タイプ
+                      </Typography>
+                      {Object.entries(results.demographics.data.household_types).map(([type, ratio]) => (
+                        <Box key={type} sx={{ mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">
+                              {type === 'single' ? '単身世帯' :
+                               type === 'couple' ? '夫婦世帯' : '家族世帯'}
+                            </Typography>
+                            <Typography variant="body2">{formatPercentage(ratio as number)}</Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(ratio as number) * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 所得水準 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        所得水準
+                      </Typography>
+                      {Object.entries(results.demographics.data.income_levels).map(([level, ratio]) => (
+                        <Box key={level} sx={{ mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">
+                              {level === 'low' ? '低所得層' :
+                               level === 'medium' ? '中所得層' : '高所得層'}
+                            </Typography>
+                            <Typography variant="body2">{formatPercentage(ratio as number)}</Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(ratio as number) * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                        </Box>
+                      ))}
                     </CardContent>
                   </Card>
                 </Grid>
               </Grid>
+            ) : (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <PeopleIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="body1" color="text.secondary">
+                  商圏分析を実行してください
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </TabPanel>
 
-              <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                検索キーワードトレンド
+      {/* 競合分析タブ */}
+      <TabPanel value={tabValue} index={1}>
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h6">
+                競合店舗分析
               </Typography>
-              <TableContainer>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>キーワード</TableCell>
-                      <TableCell align="right">検索ボリューム</TableCell>
-                      <TableCell align="center">トレンド</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {demandData.keywordTrends.map((keyword) => (
-                      <TableRow key={keyword.keyword}>
-                        <TableCell>{keyword.keyword}</TableCell>
-                        <TableCell align="right">{formatNumber(keyword.volume)}</TableCell>
-                        <TableCell align="center">
-                          <Chip 
-                            label={keyword.trend === 'up' ? '上昇' : keyword.trend === 'down' ? '下降' : '安定'}
-                            color={keyword.trend === 'up' ? 'success' : keyword.trend === 'down' ? 'error' : 'default'}
-                            size="small"
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
+              <Button
+                variant="contained"
+                startIcon={<StoreIcon />}
+                onClick={() => startAnalysis('competitors')}
+                disabled={analyzing || results.competitors?.status === 'processing'}
+              >
+                分析を実行
+              </Button>
+            </Box>
 
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
-                季節性需要パターン
-              </Typography>
-              <TableContainer>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>月</TableCell>
-                      <TableCell align="right">需要指数</TableCell>
-                      <TableCell align="right">相対値</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {demandData.seasonality.map((month) => (
-                      <TableRow key={month.month}>
-                        <TableCell>{month.month}</TableCell>
-                        <TableCell align="right">{month.demand}</TableCell>
-                        <TableCell align="right">
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Box
-                              sx={{
-                                width: `${month.demand}%`,
-                                height: 8,
-                                bgcolor: month.demand > 100 ? 'success.main' : 'primary.main',
-                                borderRadius: 1,
-                                mr: 1
-                              }}
-                            />
-                            {month.demand > 100 ? '高' : month.demand < 90 ? '低' : '普通'}
+            {results.competitors?.status === 'processing' ? (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <CircularProgress size={40} />
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  競合データを分析中...
+                </Typography>
+              </Box>
+            ) : results.competitors?.status === 'completed' ? (
+              <Grid container spacing={3}>
+                {/* 競合概要 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        競合店舗概要
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Typography variant="h4" color="primary">
+                              {results.competitors.data.direct_competitors}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              直接競合
+                            </Typography>
                           </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Box sx={{ textAlign: 'center' }}>
+                            <Typography variant="h4" color="secondary">
+                              {results.competitors.data.indirect_competitors}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              間接競合
+                            </Typography>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
 
-          <Alert severity="info" sx={{ mt: 2 }}>
-            需要データは RESAS API とGoogle Trends（MVP版ではモック）を使用しています
-          </Alert>
-        </TabPanel>
-      </Card>
-    </Box>
+                {/* 価格帯 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        市場価格帯
+                      </Typography>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="h5" color="primary">
+                          {formatCurrency(results.competitors.data.price_range.average)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          平均価格
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Box>
+                          <Typography variant="body1">
+                            {formatCurrency(results.competitors.data.price_range.min)}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            最低価格
+                          </Typography>
+                        </Box>
+                        <Box sx={{ textAlign: 'right' }}>
+                          <Typography variant="body1">
+                            {formatCurrency(results.competitors.data.price_range.max)}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            最高価格
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 市場シェア */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        市場シェア
+                      </Typography>
+                      {Object.entries(results.competitors.data.market_share).map(([position, share]) => (
+                        <Box key={position} sx={{ mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">
+                              {position === 'leader' ? 'トップ企業' :
+                               position === 'second' ? '2番手企業' : 'その他'}
+                            </Typography>
+                            <Typography variant="body2">{formatPercentage(share as number)}</Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(share as number) * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 競合力分析 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        競合力分析
+                      </Typography>
+                      {results.competitors.data.competitor_strengths.map((strength) => (
+                        <Box key={strength.name} sx={{ mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">{strength.name}</Typography>
+                            <Typography variant="body2">{strength.score.toFixed(1)}</Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(strength.score / 5) * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            ) : (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <StoreIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="body1" color="text.secondary">
+                  競合分析を実行してください
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </TabPanel>
+
+      {/* 需要予測タブ */}
+      <TabPanel value={tabValue} index={2}>
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h6">
+                市場需要予測
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<TimelineIcon />}
+                onClick={() => startAnalysis('demand')}
+                disabled={analyzing || results.demand?.status === 'processing'}
+              >
+                分析を実行
+              </Button>
+            </Box>
+
+            {results.demand?.status === 'processing' ? (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <CircularProgress size={40} />
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  需要データを分析中...
+                </Typography>
+              </Box>
+            ) : results.demand?.status === 'completed' ? (
+              <Grid container spacing={3}>
+                {/* 市場規模 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        市場規模
+                      </Typography>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="h4" color="primary">
+                          {formatCurrency(results.demand.data.market_size)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          年間市場規模
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="h6" color="success.main">
+                          +{formatPercentage(results.demand.data.growth_rate)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          年間成長率
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 需要予測 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        需要予測シナリオ
+                      </Typography>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          楽観的シナリオ
+                        </Typography>
+                        <Typography variant="h6" color="success.main">
+                          {formatCurrency(results.demand.data.forecast.optimistic)}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          現実的シナリオ
+                        </Typography>
+                        <Typography variant="h6">
+                          {formatCurrency(results.demand.data.forecast.realistic)}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          悲観的シナリオ
+                        </Typography>
+                        <Typography variant="h6" color="error">
+                          {formatCurrency(results.demand.data.forecast.pessimistic)}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 季節変動 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        季節変動
+                      </Typography>
+                      {Object.entries(results.demand.data.seasonality).map(([season, ratio]) => (
+                        <Box key={season} sx={{ mb: 1 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">
+                              {season === 'spring' ? '春季' :
+                               season === 'summer' ? '夏季' :
+                               season === 'autumn' ? '秋季' : '冬季'}
+                            </Typography>
+                            <Typography variant="body2">{formatPercentage(ratio as number - 1)}</Typography>
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={(ratio as number) * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                          />
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+
+                {/* 需要要因 */}
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardContent>
+                      <Typography variant="subtitle1" gutterBottom>
+                        需要影響要因
+                      </Typography>
+                      {results.demand.data.demand_factors.map((factor) => (
+                        <Box key={factor.factor} sx={{ mb: 2 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                            <Typography variant="body2">{factor.factor}</Typography>
+                            <Chip
+                              label={factor.impact === 'positive' ? '好影響' :
+                                    factor.impact === 'negative' ? '悪影響' : '中立'}
+                              color={factor.impact === 'positive' ? 'success' :
+                                    factor.impact === 'negative' ? 'error' : 'default'}
+                              size="small"
+                            />
+                          </Box>
+                          <LinearProgress
+                            variant="determinate"
+                            value={factor.strength * 100}
+                            sx={{ height: 8, borderRadius: 4 }}
+                            color={factor.impact === 'positive' ? 'success' :
+                                  factor.impact === 'negative' ? 'error' : 'primary'}
+                          />
+                        </Box>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            ) : (
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <TimelineIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="body1" color="text.secondary">
+                  需要予測を実行してください
+                </Typography>
+              </Box>
+            )}
+          </CardContent>
+        </Card>
+      </TabPanel>
+    </Container>
   )
 }
 

@@ -1,123 +1,57 @@
-name: 🚀 Auto Deploy MVT Analytics
+name: Deploy to Production
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
 
 jobs:
-  test-backend:
-    name: 🧪 Test Backend
+  deploy:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     
-    - name: Set up Python 3.11
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.13'
     
-    - name: Install dependencies
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    
+    - name: Install Python dependencies
       run: |
         cd backend
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Test API
-      run: |
-        cd backend
-        python -c "import main; print('✅ Backend imports successfully')"
-        python -c "
-        from main import app
-        from fastapi.testclient import TestClient
-        client = TestClient(app)
-        response = client.get('/')
-        assert response.status_code == 200
-        print('✅ API health check passed')
-        "
-
-  test-frontend:
-    name: 🎨 Test Frontend
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js 18
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
-    
-    - name: Install dependencies
+    - name: Install Node.js dependencies
       run: |
         cd frontend
-        npm ci
+        npm install
     
     - name: Build frontend
       run: |
         cd frontend
         npm run build
     
-    - name: Test build
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        cd frontend
-        ls -la dist/
-        echo "✅ Frontend build successful"
-
-  deploy:
-    name: 🚀 Auto Deploy
-    needs: [test-backend, test-frontend]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: 🎉 Deploy Notification
-      run: |
-        echo "🚀 All tests passed! Auto-deploying to production..."
-        echo "📡 Railway (Backend): Auto-deploy triggered"
-        echo "🌐 Vercel (Frontend): Auto-deploy triggered"
-        echo "⏱️  Deployment will complete in ~2-3 minutes"
-
-  notify-success:
-    name: 🎉 Success Notification
-    needs: [deploy]
-    runs-on: ubuntu-latest
-    if: success()
-    steps:
-    - name: Success message
-      run: |
-        echo "🎉 SUCCESS: MVT Analytics deployed successfully!"
-        echo "🔗 Backend API: https://mvt-analytics-production.up.railway.app/"
-        echo "🔗 Frontend App: https://mvtanalytics.vercel.app/"
-        echo "✅ All systems operational"
-
-  deploy-vercel:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: Install Frontend Dependencies
-        working-directory: ./frontend
-        run: npm install
+        curl https://cli-assets.heroku.com/install.sh | sh
+        heroku container:login
         
-      - name: Build Frontend
-        working-directory: ./frontend
-        run: npm run build
+        # Deploy backend
+        cd backend
+        heroku container:push web --app mvt-analytics-api
+        heroku container:release web --app mvt-analytics-api
         
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./frontend
-          vercel-args: '--prod' 
+        # Deploy frontend
+        cd ../frontend
+        heroku container:push web --app mvt-analytics-frontend
+        heroku container:release web --app mvt-analytics-frontend 

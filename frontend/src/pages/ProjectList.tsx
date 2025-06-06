@@ -24,7 +24,8 @@ import {
   Tooltip,
   LinearProgress,
   Alert,
-  CircularProgress
+  CircularProgress,
+  Container
 } from '@mui/material'
 import {
   Add as AddIcon,
@@ -37,7 +38,10 @@ import {
   FilterList as FilterIcon,
   Business as BusinessIcon,
   LocationOn as LocationOnIcon,
-  Analytics as AnalyticsIcon
+  Analytics as AnalyticsIcon,
+  Schedule as ScheduleIcon,
+  Assessment as AssessmentIcon,
+  Close as CloseIcon
 } from '@mui/icons-material'
 
 interface Project {
@@ -85,6 +89,13 @@ const statusLabels = {
   completed: '完了',
   paused: '一時停止'
 } as const
+
+const statusOptions = [
+  { value: 'all', label: 'すべて' },
+  { value: 'active', label: '進行中' },
+  { value: 'completed', label: '完了' },
+  { value: 'paused', label: '一時停止' }
+]
 
 function ProjectList() {
   const navigate = useNavigate()
@@ -261,142 +272,80 @@ function ProjectList() {
 
   // プロジェクトカードのデザイン改善
   const renderProjectCard = (project: Project) => (
-    <Card 
-      key={project.id} 
-      sx={{ 
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 4,
-        },
-        position: 'relative',
-        border: '1px solid',
-        borderColor: project.status === 'active' ? 'primary.main' : 
-                   project.status === 'completed' ? 'success.main' : 'warning.main'
-      }}
-    >
-      {/* ステータスバッジ */}
-      <Box sx={{ position: 'absolute', top: 12, right: 12, zIndex: 1 }}>
-        <Chip
-          label={project.status === 'active' ? '進行中' : 
-                 project.status === 'completed' ? '完了' : '一時停止'}
-          color={project.status === 'active' ? 'primary' : 
-                 project.status === 'completed' ? 'success' : 'warning'}
-          size="small"
-          variant="filled"
-        />
-      </Box>
-
-      <CardContent sx={{ flex: 1, pb: 1 }}>
-        {/* プロジェクト名 */}
-        <Typography variant="h6" component="h3" gutterBottom sx={{ pr: 8 }}>
-          {project.name}
-        </Typography>
-
-        {/* 業界・エリア情報 */}
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-          <Chip 
-            label={getIndustryLabel(project.industry_type)}
-            variant="outlined"
-            size="small"
-            icon={<BusinessIcon />}
-          />
-          <Chip 
-            label={project.target_area}
-            variant="outlined"
-            size="small"
-            icon={<LocationOnIcon />}
-          />
-        </Box>
-
-        {/* 説明 */}
-        <Typography 
-          variant="body2" 
-          color="text.secondary" 
-          sx={{ 
-            mb: 2,
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            minHeight: '2.5em'
-          }}
-        >
-          {project.description || 'プロジェクトの詳細説明はありません'}
-        </Typography>
-
-        {/* 日付情報 */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-          <Typography variant="caption" color="text.secondary">
-            作成日: {formatDate(project.created_at)}
+    <Grid item xs={12} md={6} key={project.id}>
+      <Card
+        sx={{
+          cursor: 'pointer',
+          '&:hover': {
+            boxShadow: 6,
+            transform: 'translateY(-2px)',
+            transition: 'all 0.2s ease-in-out'
+          }
+        }}
+        onClick={() => navigate(`/projects/${project.id}`)}
+      >
+        <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              {project.name}
+            </Typography>
+            <Chip
+              label={statusLabels[project.status as keyof typeof statusLabels]}
+              color={statusColors[project.status as keyof typeof statusColors]}
+              size="small"
+            />
+          </Box>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {project.description}
           </Typography>
-          {project.updated_at && project.updated_at !== project.created_at && (
-            <Typography variant="caption" color="text.secondary">
-              更新日: {formatDate(project.updated_at)}
-            </Typography>
-          )}
-        </Box>
-
-        {/* シミュレーション情報（もしあれば） */}
-        {project.latest_simulation && (
-          <Box sx={{ mt: 2, p: 1.5, bgcolor: 'grey.50', borderRadius: 1 }}>
-            <Typography variant="caption" color="text.secondary" gutterBottom>
-              最新シミュレーション
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2" fontWeight="medium">
-                月間売上目標: {formatCurrency(project.latest_simulation.target_monthly_sales)}
-              </Typography>
-              <Typography variant="body2" color="primary.main">
-                {project.latest_simulation.breakeven_months}ヶ月で損益分岐
+          <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+            <Chip
+              icon={<BusinessIcon />}
+              label={industryTypes.find(i => i.value === project.industry_type)?.label || project.industry_type}
+              variant="outlined"
+              size="small"
+            />
+            <Chip
+              icon={<LocationOnIcon />}
+              label={project.target_area}
+              variant="outlined"
+              size="small"
+            />
+          </Stack>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ScheduleIcon fontSize="small" color="action" sx={{ mr: 1 }} />
+              <Typography variant="caption" color="text.secondary">
+                作成日: {formatDate(project.created_at)}
               </Typography>
             </Box>
+            <Stack direction="row" spacing={1}>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/simulator/${project.id}`)
+                }}
+              >
+                <TrendingUpIcon />
+              </IconButton>
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/analysis/${project.id}`)
+                }}
+              >
+                <AssessmentIcon />
+              </IconButton>
+            </Stack>
           </Box>
-        )}
-      </CardContent>
-
-      {/* アクションボタン */}
-      <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
-        <Button
-          size="small"
-          variant="outlined"
-          startIcon={<AnalyticsIcon />}
-          onClick={() => {/* TODO: 詳細画面へ */}}
-        >
-          詳細分析
-        </Button>
-        <Box>
-          <IconButton
-            size="small"
-            onClick={(e) => handleMenuOpen(e, project)}
-            sx={{ ml: 1 }}
-          >
-            <MoreVertIcon />
-          </IconButton>
-        </Box>
-      </CardActions>
-    </Card>
+        </CardContent>
+      </Card>
+    </Grid>
   )
-
-  // 業界ラベル取得関数
-  const getIndustryLabel = (industry: string) => {
-    const labels: { [key: string]: string } = {
-      'beauty': '美容・サロン',
-      'restaurant': '飲食店',
-      'retail': '小売業',
-      'healthcare': 'ヘルスケア',
-      'education': '教育',
-      'it': 'IT・テック',
-      'consulting': 'コンサルティング',
-      'finance': '金融',
-      'real_estate': '不動産',
-      'other': 'その他'
-    }
-    return labels[industry] || industry
-  }
 
   if (loading) {
     return (
@@ -410,145 +359,104 @@ function ProjectList() {
   }
 
   return (
-    <Box>
+    <Container maxWidth="lg">
       {/* ヘッダー */}
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        mb: 4,
-        p: 3,
-        bgcolor: 'primary.main',
-        color: 'white',
-        borderRadius: 2,
-        boxShadow: 2
-      }}>
-        <Box>
-          <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-            プロジェクト管理
-          </Typography>
-          <Typography variant="body1" sx={{ opacity: 0.9 }}>
-            事業分析プロジェクトの作成・管理・分析
-          </Typography>
-        </Box>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleOpenCreateDialog}
-          size="large"
-          sx={{ 
-            bgcolor: 'white',
-            color: 'primary.main',
-            '&:hover': {
-              bgcolor: 'grey.100'
-            },
-            px: 3,
-            py: 1.5
-          }}
-        >
-          新規プロジェクト作成
-        </Button>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          プロジェクト一覧
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          MVTアナリティクスで管理しているプロジェクトの一覧です
+        </Typography>
       </Box>
 
       {/* フィルタリング */}
-      <Card sx={{ mb: 3, boxShadow: 2 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
-            <FilterIcon sx={{ mr: 1 }} />
-            検索・フィルタ
-          </Typography>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} md={5}>
-              <TextField
-                fullWidth
-                placeholder="プロジェクト名・説明・エリアで検索..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: <SearchIcon sx={{ mr: 1, color: 'text.secondary' }} />
-                }}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth>
-                <InputLabel>ステータス</InputLabel>
-                <Select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  label="ステータス"
-                >
-                  <MenuItem value="all">すべてのステータス</MenuItem>
-                  <MenuItem value="active">🟢 進行中</MenuItem>
-                  <MenuItem value="completed">✅ 完了</MenuItem>
-                  <MenuItem value="paused">⏸️ 一時停止</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth>
-                <InputLabel>業界</InputLabel>
-                <Select
-                  value={filterIndustry}
-                  onChange={(e) => setFilterIndustry(e.target.value)}
-                  label="業界"
-                >
-                  <MenuItem value="all">すべての業界</MenuItem>
-                  <MenuItem value="beauty">美容・サロン</MenuItem>
-                  <MenuItem value="restaurant">飲食店</MenuItem>
-                  <MenuItem value="retail">小売業</MenuItem>
-                  <MenuItem value="healthcare">ヘルスケア</MenuItem>
-                  <MenuItem value="education">教育</MenuItem>
-                  <MenuItem value="it">IT・テック</MenuItem>
-                  <MenuItem value="consulting">コンサルティング</MenuItem>
-                  <MenuItem value="finance">金融</MenuItem>
-                  <MenuItem value="real_estate">不動産</MenuItem>
-                  <MenuItem value="other">その他</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={1}>
-              <Typography variant="body2" color="text.secondary" textAlign="center">
-                {filteredProjects.length} 件
-              </Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-
-      {/* プロジェクト一覧 */}
-      {filteredProjects.length === 0 ? (
-        <Box sx={{ 
-          textAlign: 'center', 
-          py: 8,
-          bgcolor: 'grey.50',
-          borderRadius: 2,
-          border: '2px dashed',
-          borderColor: 'grey.300'
-        }}>
-          <BusinessIcon sx={{ fontSize: 64, color: 'grey.400', mb: 2 }} />
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            {searchTerm || filterStatus !== 'all' || filterIndustry !== 'all' 
-              ? '検索条件に一致するプロジェクトが見つかりません' 
-              : 'プロジェクトがまだありません'}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            新しいプロジェクトを作成して事業分析を始めましょう
-          </Typography>
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={4}>
+          <TextField
+            fullWidth
+            placeholder="プロジェクト名、説明、エリアで検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: searchTerm && (
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={() => setSearchTerm('')}>
+                    <CloseIcon />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth>
+            <InputLabel>業界</InputLabel>
+            <Select
+              value={filterIndustry}
+              label="業界"
+              onChange={(e) => setFilterIndustry(e.target.value)}
+            >
+              <MenuItem value="all">すべての業界</MenuItem>
+              {industryTypes.map(type => (
+                <MenuItem key={type.value} value={type.value}>
+                  {type.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth>
+            <InputLabel>ステータス</InputLabel>
+            <Select
+              value={filterStatus}
+              label="ステータス"
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              {statusOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={2}>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
+            fullWidth
             onClick={handleOpenCreateDialog}
-            size="large"
+            sx={{ height: '100%' }}
           >
-            最初のプロジェクトを作成
+            新規作成
           </Button>
-        </Box>
-      ) : (
-        <Grid container spacing={3}>
-          {filteredProjects.map(renderProjectCard)}
         </Grid>
-      )}
+      </Grid>
+
+      {/* プロジェクト一覧 */}
+      <Grid container spacing={3}>
+        {filteredProjects.length === 0 ? (
+          <Grid item xs={12}>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                プロジェクトが見つかりません
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                検索条件を変更するか、新しいプロジェクトを作成してください
+              </Typography>
+            </Box>
+          </Grid>
+        ) : (
+          filteredProjects.map(renderProjectCard)
+        )}
+      </Grid>
 
       {/* 新規プロジェクト作成ダイアログ */}
       <Dialog 
@@ -698,7 +606,7 @@ function ProjectList() {
                       <Chip label={`📝 ${formData.name}`} variant="outlined" />
                     )}
                     {formData.industry_type && (
-                      <Chip label={getIndustryLabel(formData.industry_type)} variant="outlined" />
+                      <Chip label={industryTypes.find(i => i.value === formData.industry_type)?.label || formData.industry_type} variant="outlined" />
                     )}
                     {formData.target_area && (
                       <Chip label={`📍 ${formData.target_area}`} variant="outlined" />
@@ -762,7 +670,7 @@ function ProjectList() {
           削除
         </MenuItem>
       </Menu>
-    </Box>
+    </Container>
   )
 }
 
