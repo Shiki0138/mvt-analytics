@@ -746,7 +746,15 @@ def simulate_project(project_id: str, simulation_data: dict):
         industry = project_row[0] if project_row else "beauty"
         conn.close()
         
-        # 業界・媒体別の詳細計算
+        # 業界データベースを使用した詳細計算
+        try:
+            from services.industry_database import industry_db
+            industry_data = industry_db.get_industry_data(industry)
+            marketing_channels = industry_db.get_marketing_channels(industry)
+        except ImportError:
+            # フォールバック: 従来のハードコードデータ
+            marketing_channels = industry_channel_metrics.get(industry, industry_channel_metrics["beauty"])
+        
         total_expected_customers = 0
         total_expected_clicks = 0
         detailed_results = {}
@@ -756,16 +764,21 @@ def simulate_project(project_id: str, simulation_data: dict):
                 budget = media_budgets[media]
                 
                 # 業界・媒体固有の指標を取得
-                metrics = industry_channel_metrics.get(industry, {}).get(media, {
-                    "cvr": 0.025, "cpc": 100, "ctr": 0.030
-                })
+                if 'industry_data' in locals():
+                    metrics = marketing_channels.get(media, {
+                        "cvr": 0.025, "cpc": 100, "ctr": 0.030
+                    })
+                else:
+                    metrics = industry_channel_metrics.get(industry, {}).get(media, {
+                        "cvr": 0.025, "cpc": 100, "ctr": 0.030
+                    })
                 
                 media_cpc = metrics["cpc"]
                 media_cvr = metrics["cvr"]
                 media_ctr = metrics["ctr"]
                 
                 # 媒体別の計算
-                media_clicks = budget / media_cpc
+                media_clicks = budget / media_cpc if media_cpc > 0 else 0
                 media_customers = int(media_clicks * media_cvr)
                 
                 total_expected_clicks += media_clicks
@@ -777,7 +790,8 @@ def simulate_project(project_id: str, simulation_data: dict):
                     "expected_customers": media_customers,
                     "cpc": media_cpc,
                     "cvr": media_cvr,
-                    "ctr": media_ctr
+                    "ctr": media_ctr,
+                    "quality_score": metrics.get("quality_score", 7.0)
                 }
         
         # 総計算
@@ -809,6 +823,29 @@ def simulate_project(project_id: str, simulation_data: dict):
         else:
             breakeven_months = 999  # 利益が出ない場合
         
+        # 業界比較分析を追加
+        industry_comparison = {}
+        if 'industry_data' in locals():
+            try:
+                metrics_for_comparison = {
+                    "monthly_revenue": monthly_revenue,
+                    "profit_margin": monthly_profit / monthly_revenue if monthly_revenue > 0 else 0
+                }
+                industry_comparison = industry_db.get_market_comparison(industry, metrics_for_comparison)
+                
+                # リスク分析も追加
+                risk_analysis = industry_db.get_risk_analysis(industry)
+                
+                # 損益分岐点詳細分析
+                breakeven_analysis = industry_db.calculate_breakeven_analysis(
+                    industry, monthly_revenue, initial_costs
+                )
+            except Exception as e:
+                print(f"業界分析エラー: {e}")
+                industry_comparison = {}
+                risk_analysis = []
+                breakeven_analysis = {}
+        
         # 結果生成
         result = {
             "monthly_revenue": int(monthly_revenue),
@@ -819,7 +856,10 @@ def simulate_project(project_id: str, simulation_data: dict):
             "required_customers": required_customers,
             "expected_customers": expected_customers,
             "conversion_rate": weighted_cvr,
-            "media_breakdown": detailed_results
+            "media_breakdown": detailed_results,
+            "industry_comparison": industry_comparison,
+            "risk_factors": risk_analysis if 'risk_analysis' in locals() else [],
+            "enhanced_analysis": breakeven_analysis if 'breakeven_analysis' in locals() else {}
         }
         
         return {

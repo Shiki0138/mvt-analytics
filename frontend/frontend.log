@@ -193,3 +193,569 @@
       at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
       at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
       at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+20:46:24 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (952:33)
+
+  950 |               <Grid container spacing={2}>
+  951 |                 <Grid item xs={12}>
+> 952 |                   <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+      |                                  ^
+  953 |                     <CardContent>
+  954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+  955 |                         📊 投資判定結果
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:952:33
+  950|                <Grid container spacing={2}>
+  951|                  <Grid item xs={12}>
+  952|                    <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+     |                                   ^
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+20:51:43 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (952:33)
+
+  950 |               <Grid container spacing={2}>
+  951 |                 <Grid item xs={12}>
+> 952 |                   <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+      |                                  ^
+  953 |                     <CardContent>
+  954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+  955 |                         📊 投資判定結果
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:952:33
+  950|                <Grid container spacing={2}>
+  951|                  <Grid item xs={12}>
+  952|                    <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+     |                                   ^
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+22:16:43 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (952:33)
+
+  950 |               <Grid container spacing={2}>
+  951 |                 <Grid item xs={12}>
+> 952 |                   <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+      |                                  ^
+  953 |                     <CardContent>
+  954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+  955 |                         📊 投資判定結果
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:952:33
+  950|                <Grid container spacing={2}>
+  951|                  <Grid item xs={12}>
+  952|                    <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+     |                                   ^
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+22:22:45 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (952:33)
+
+  950 |               <Grid container spacing={2}>
+  951 |                 <Grid item xs={12}>
+> 952 |                   <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+      |                                  ^
+  953 |                     <CardContent>
+  954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+  955 |                         📊 投資判定結果
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:952:33
+  950|                <Grid container spacing={2}>
+  951|                  <Grid item xs={12}>
+  952|                    <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+     |                                   ^
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+22:35:05 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (952:33)
+
+  950 |               <Grid container spacing={2}>
+  951 |                 <Grid item xs={12}>
+> 952 |                   <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+      |                                  ^
+  953 |                     <CardContent>
+  954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+  955 |                         📊 投資判定結果
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:952:33
+  950|                <Grid container spacing={2}>
+  951|                  <Grid item xs={12}>
+  952|                    <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+     |                                   ^
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+22:44:08 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (952:33)
+
+  950 |               <Grid container spacing={2}>
+  951 |                 <Grid item xs={12}>
+> 952 |                   <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+      |                                  ^
+  953 |                     <CardContent>
+  954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+  955 |                         📊 投資判定結果
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:952:33
+  950|                <Grid container spacing={2}>
+  951|                  <Grid item xs={12}>
+  952|                    <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+     |                                   ^
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+23:21:24 [vite] hmr update /src/pages/Reports.tsx
+23:21:24 [vite] Pre-transform error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (954:43)
+
+  952 |                   <Card variant="outlined" sx={{ bgcolor: '#f5f5f5' }}>
+  953 |                     <CardContent>
+> 954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      |                                            ^
+  955 |                         📊 投資判定結果
+  956 |                       </Typography>
+  957 |                       <Typography variant=\"h4\" color=\"success.main\" sx={{ mb: 2 }}>
+23:21:24 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (954:43)
+
+  952 |                   <Card variant="outlined" sx={{ bgcolor: '#f5f5f5' }}>
+  953 |                     <CardContent>
+> 954 |                       <Typography variant=\"h6\" gutterBottom color=\"primary\">
+      |                                            ^
+  955 |                         📊 投資判定結果
+  956 |                       </Typography>
+  957 |                       <Typography variant=\"h4\" color=\"success.main\" sx={{ mb: 2 }}>
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:954:43
+  952|                    <Card variant="outlined" sx={{ bgcolor: '#f5f5f5' }}>
+  953|                      <CardContent>
+  954|                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+     |                                             ^
+  955|                          📊 投資判定結果
+  956|                        </Typography>
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+23:21:39 [vite] hmr update /src/pages/Reports.tsx
+23:21:39 [vite] Pre-transform error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (987:33)
+
+  985 |               <Grid container spacing={2}>
+  986 |                 <Grid item xs={12} md={6}>
+> 987 |                   <Card variant=\"outlined\">
+      |                                  ^
+  988 |                     <CardContent>
+  989 |                       <Typography variant=\"h6\" gutterBottom>立地スコア総合評価</Typography>
+  990 |                       <Typography variant=\"h3\" color=\"primary\" sx={{ textAlign: 'center' }}>
+23:21:39 [vite] Internal server error: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx: Expecting Unicode escape sequence \uXXXX. (987:33)
+
+  985 |               <Grid container spacing={2}>
+  986 |                 <Grid item xs={12} md={6}>
+> 987 |                   <Card variant=\"outlined\">
+      |                                  ^
+  988 |                     <CardContent>
+  989 |                       <Typography variant=\"h6\" gutterBottom>立地スコア総合評価</Typography>
+  990 |                       <Typography variant=\"h3\" color=\"primary\" sx={{ textAlign: 'center' }}>
+  Plugin: vite:react-babel
+  File: /Users/MBP/mvt-analytics/frontend/src/pages/Reports.tsx:987:33
+  985|                <Grid container spacing={2}>
+  986|                  <Grid item xs={12} md={6}>
+  987|                    <Card variant=\"outlined\">
+     |                                   ^
+  988|                      <CardContent>
+  989|                        <Typography variant=\"h6\" gutterBottom>立地スコア総合評価</Typography>
+      at constructor (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:363:19)
+      at TypeScriptParserMixin.raise (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6609:19)
+      at TypeScriptParserMixin.readWord1 (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6569:16)
+      at TypeScriptParserMixin.readWord (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6589:23)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6308:14)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4809:11)
+      at TypeScriptParserMixin.getTokenFromCode (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9946:11)
+      at TypeScriptParserMixin.nextToken (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5792:10)
+      at TypeScriptParserMixin.next (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5702:10)
+      at TypeScriptParserMixin.eat (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:5706:12)
+      at TypeScriptParserMixin.jsxParseAttribute (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4665:23)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4679:28)
+      at TypeScriptParserMixin.jsxParseOpeningElementAfterName (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10004:18)
+      at TypeScriptParserMixin.jsxParseOpeningElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4674:17)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4698:33)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElementAt (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4710:32)
+      at TypeScriptParserMixin.jsxParseElement (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4761:17)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4771:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10835:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:39
+      at TypeScriptParserMixin.tryParse (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:6918:20)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9732:18)
+      at /Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:39
+      at TypeScriptParserMixin.allowInAnd (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:12361:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10734:17)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11608:28)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11262:23)
+      at TypeScriptParserMixin.parseExprAtom (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:4776:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:11012:23)
+      at TypeScriptParserMixin.parseUpdate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10997:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10977:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9794:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10830:61)
+      at TypeScriptParserMixin.parseExprOpBaseRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10917:34)
+      at TypeScriptParserMixin.parseExprOpRightExpr (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10912:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10878:27)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10884:21)
+      at TypeScriptParserMixin.parseExprOp (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:9335:18)
+      at TypeScriptParserMixin.parseExprOps (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10839:17)
+      at TypeScriptParserMixin.parseMaybeConditional (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10812:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/Users/MBP/mvt-analytics/frontend/node_modules/@babel/parser/lib/index.js:10765:21)
+23:27:11 [vite] hmr update /src/pages/Reports.tsx
+0:03:47 [vite] hmr update /src/pages/Simulator.tsx
+0:04:23 [vite] hmr update /src/pages/Simulator.tsx
+0:05:22 [vite] hmr update /src/components/DataVisualization.tsx
+0:05:28 [vite] hmr update /src/components/DataVisualization.tsx
+0:05:35 [vite] hmr update /src/components/DataVisualization.tsx
+0:05:35 [vite] hmr update /src/components/DataVisualization.tsx
+0:05:49 [vite] hmr update /src/App.tsx
+0:05:50 [vite] hmr update /src/App.tsx
+0:06:08 [vite] hmr update /src/App.tsx

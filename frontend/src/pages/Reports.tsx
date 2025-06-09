@@ -949,30 +949,30 @@ function Reports() {
             {section.title === '🎯 出店戦略サマリー' && (
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Card variant=\"outlined\" sx={{ bgcolor: '#f5f5f5' }}>
+                  <Card variant="outlined" sx={{ bgcolor: '#f5f5f5' }}>
                     <CardContent>
-                      <Typography variant=\"h6\" gutterBottom color=\"primary\">
+                      <Typography variant="h6" gutterBottom color="primary">
                         📊 投資判定結果
                       </Typography>
-                      <Typography variant=\"h4\" color=\"success.main\" sx={{ mb: 2 }}>
+                      <Typography variant="h4" color="success.main" sx={{ mb: 2 }}>
                         {section.content.recommendation}
                       </Typography>
                       <Grid container spacing={2}>
                         <Grid item xs={6} md={3}>
-                          <Typography variant=\"subtitle2\">期待ROI</Typography>
-                          <Typography variant=\"h6\" color=\"primary\">{section.content.expectedROI?.toFixed(1)}%</Typography>
+                          <Typography variant="subtitle2">期待ROI</Typography>
+                          <Typography variant="h6" color="primary">{section.content.expectedROI?.toFixed(1)}%</Typography>
                         </Grid>
                         <Grid item xs={6} md={3}>
-                          <Typography variant=\"subtitle2\">回収期間</Typography>
-                          <Typography variant=\"h6\">{section.content.timeToBreakeven}ヶ月</Typography>
+                          <Typography variant="subtitle2">回収期間</Typography>
+                          <Typography variant="h6">{section.content.timeToBreakeven}ヶ月</Typography>
                         </Grid>
                         <Grid item xs={6} md={3}>
-                          <Typography variant=\"subtitle2\">リスクレベル</Typography>
-                          <Typography variant=\"h6\" color={section.content.riskLevel?.color || 'primary'}>{section.content.riskLevel?.level || '中'}</Typography>
+                          <Typography variant="subtitle2">リスクレベル</Typography>
+                          <Typography variant="h6" color={section.content.riskLevel?.color || 'primary'}>{section.content.riskLevel?.level || '中'}</Typography>
                         </Grid>
                         <Grid item xs={6} md={3}>
-                          <Typography variant=\"subtitle2\">投資推奨度</Typography>
-                          <Typography variant=\"h6\" color=\"success.main\">推奨</Typography>
+                          <Typography variant="subtitle2">投資推奨度</Typography>
+                          <Typography variant="h6" color="success.main">推奨</Typography>
                         </Grid>
                       </Grid>
                     </CardContent>
@@ -984,44 +984,44 @@ function Reports() {
             {section.title === '📍 立地戦略分析' && (
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <Card variant=\"outlined\">
+                  <Card variant="outlined">
                     <CardContent>
-                      <Typography variant=\"h6\" gutterBottom>立地スコア総合評価</Typography>
-                      <Typography variant=\"h3\" color=\"primary\" sx={{ textAlign: 'center' }}>
+                      <Typography variant="h6" gutterBottom>立地スコア総合評価</Typography>
+                      <Typography variant="h3" color="primary" sx={{ textAlign: 'center' }}>
                         {section.content.locationScore?.overall || 85}/100
                       </Typography>
-                      <Typography variant=\"h6\" sx={{ textAlign: 'center', mb: 2, color: 'success.main' }}>優良立地</Typography>
+                      <Typography variant="h6" sx={{ textAlign: 'center', mb: 2, color: 'success.main' }}>優良立地</Typography>
                       
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>🚶 アクセス:</strong> {section.content.accessibility?.stationDistance || '徒歩3分'}
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>👥 人通り:</strong> {section.content.footTraffic?.weekendAfternoon?.level || '非常に高'} ({section.content.footTraffic?.weekendAfternoon?.count || '400-500人/時'})
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>⚔️ 競合密度:</strong> {section.content.competitionDensity?.marketSaturation || '中'}レベル
                       </Typography>
-                      <Typography variant=\"body1\">
+                      <Typography variant="body1">
                         <strong>📈 成長性:</strong> {section.content.growthPotential?.futureProspects || '良好'}
                       </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Card variant=\"outlined\">
+                  <Card variant="outlined">
                     <CardContent>
-                      <Typography variant=\"h6\" gutterBottom>💰 賃料・コスト分析</Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="h6" gutterBottom>💰 賃料・コスト分析</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>月額賃料:</strong> {formatCurrency(section.content.rentEstimate?.monthlyRent || 450000)}
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>坪単価:</strong> ¥{section.content.rentEstimate?.sqmPrice?.toLocaleString() || '15,000'}/坪
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>敷金・礼金:</strong> {formatCurrency(section.content.rentEstimate?.totalInitialCost || 4050000)}
                       </Typography>
                       <Box sx={{ mt: 2, p: 1, bgcolor: 'success.light', borderRadius: 1 }}>
-                        <Typography variant=\"body2\" color=\"success.dark\">
+                        <Typography variant="body2" color="success.dark">
                           💡 同エリア平均より15%低い賃料水準で非常に有利
                         </Typography>
                       </Box>
@@ -1035,51 +1035,51 @@ function Reports() {
               <Box>
                 <Grid container spacing={2} sx={{ mb: 3 }}>
                   <Grid item xs={12} md={4}>
-                    <Card variant=\"outlined\">
+                    <Card variant="outlined">
                       <CardContent sx={{ textAlign: 'center' }}>
-                        <Typography variant=\"h5\" color=\"primary\">
+                        <Typography variant="h5" color="primary">
                           {formatCurrency(section.content.revenueProjection?.year1 || 14400000)}
                         </Typography>
-                        <Typography variant=\"body2\">初年度売上予測</Typography>
+                        <Typography variant="body2">初年度売上予測</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <Card variant=\"outlined\">
+                    <Card variant="outlined">
                       <CardContent sx={{ textAlign: 'center' }}>
-                        <Typography variant=\"h5\" color=\"success.main\">
+                        <Typography variant="h5" color="success.main">
                           {section.content.profitabilityAnalysis?.netMargin || '29.2%'}
                         </Typography>
-                        <Typography variant=\"body2\">営業利益率</Typography>
+                        <Typography variant="body2">営業利益率</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <Card variant=\"outlined\">
+                    <Card variant="outlined">
                       <CardContent sx={{ textAlign: 'center' }}>
-                        <Typography variant=\"h5\" color=\"info.main\">
+                        <Typography variant="h5" color="info.main">
                           {section.content.investmentSummary?.paybackPeriod || 8}ヶ月
                         </Typography>
-                        <Typography variant=\"body2\">投資回収期間</Typography>
+                        <Typography variant="body2">投資回収期間</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
                 </Grid>
                 
-                <Card variant=\"outlined\">
+                <Card variant="outlined">
                   <CardContent>
-                    <Typography variant=\"h6\" gutterBottom>📊 感度分析</Typography>
+                    <Typography variant="h6" gutterBottom>📊 感度分析</Typography>
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
-                        <Typography variant=\"body2\">顧客数 -10%</Typography>
-                        <Typography variant=\"h6\" color=\"error.main\">{formatCurrency(section.content.sensitivityAnalysis?.customerDecrease10 || 297500)}</Typography>
+                        <Typography variant="body2">顧客数 -10%</Typography>
+                        <Typography variant="h6" color="error.main">{formatCurrency(section.content.sensitivityAnalysis?.customerDecrease10 || 297500)}</Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Typography variant=\"body2\">顧客数 +10%</Typography>
-                        <Typography variant=\"h6\" color=\"success.main\">{formatCurrency(section.content.sensitivityAnalysis?.customerIncrease10 || 402500)}</Typography>
+                        <Typography variant="body2">顧客数 +10%</Typography>
+                        <Typography variant="h6" color="success.main">{formatCurrency(section.content.sensitivityAnalysis?.customerIncrease10 || 402500)}</Typography>
                       </Grid>
                     </Grid>
-                    <Typography variant=\"body2\" color=\"warning.main\" sx={{ mt: 1 }}>
+                    <Typography variant="body2" color="warning.main" sx={{ mt: 1 }}>
                       ⚠️ 最重要指標: {section.content.sensitivityAnalysis?.mostSensitive || '顧客数変動'}
                     </Typography>
                   </CardContent>
@@ -1090,38 +1090,38 @@ function Reports() {
             {section.title === '⚔️ 競合戦略・差別化' && (
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <Card variant=\"outlined\">
+                  <Card variant="outlined">
                     <CardContent>
-                      <Typography variant=\"h6\" gutterBottom>🎯 競合ポジショニング</Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="h6" gutterBottom>🎯 競合ポジショニング</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>市場ポジション:</strong> {section.content.competitivePositioning?.marketPosition || 'プレミアム・中価格帯'}
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>メインターゲット:</strong> {section.content.competitivePositioning?.targetSegment || '品質重視の25-40歳女性'}
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>価値提案:</strong> {section.content.competitivePositioning?.valueProposition || '高品質サービス × リーズナブル価格'}
                       </Typography>
-                      <Typography variant=\"body1\">
+                      <Typography variant="body1">
                         <strong>独自性:</strong> {section.content.competitivePositioning?.uniqueSellingPoint || '最新技術 + 個別カウンセリング'}
                       </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Card variant=\"outlined\">
+                  <Card variant="outlined">
                     <CardContent>
-                      <Typography variant=\"h6\" gutterBottom>🚀 差別化戦略</Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="h6" gutterBottom>🚀 差別化戦略</Typography>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>サービス品質:</strong> {section.content.differentiationStrategy?.serviceQuality || '業界トップレベルの技術力'}
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>顧客体験:</strong> {section.content.differentiationStrategy?.customerExperience || '完全個室 + アフターケア'}
                       </Typography>
-                      <Typography variant=\"body1\" sx={{ mb: 1 }}>
+                      <Typography variant="body1" sx={{ mb: 1 }}>
                         <strong>価格戦略:</strong> {section.content.differentiationStrategy?.pricing || '競合より10-15%高単価での価値提供'}
                       </Typography>
-                      <Typography variant=\"body1\">
+                      <Typography variant="body1">
                         <strong>マーケティング:</strong> {section.content.differentiationStrategy?.marketing || 'Instagram + 口コミマーケティング'}
                       </Typography>
                     </CardContent>
@@ -1134,16 +1134,16 @@ function Reports() {
               <Grid container spacing={2}>
                 {section.content.timeline?.map((phase: any, idx: number) => (
                   <Grid item xs={12} md={3} key={idx}>
-                    <Card variant=\"outlined\" sx={{ height: '100%' }}>
+                    <Card variant="outlined" sx={{ height: '100%' }}>
                       <CardContent>
-                        <Typography variant=\"h6\" gutterBottom color=\"primary\">
+                        <Typography variant="h6" gutterBottom color="primary">
                           {phase.phase}
                         </Typography>
-                        <Typography variant=\"body2\" color=\"text.secondary\" gutterBottom>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
                           📅 期間: {phase.duration}
                         </Typography>
                         {phase.tasks?.map((task: string, taskIdx: number) => (
-                          <Typography key={taskIdx} variant=\"body2\" sx={{ mb: 0.5 }}>
+                          <Typography key={taskIdx} variant="body2" sx={{ mb: 0.5 }}>
                             ✓ {task}
                           </Typography>
                         ))}
@@ -1156,30 +1156,30 @@ function Reports() {
 
             {section.title === '🛡️ リスク管理戦略' && (
               <Box>
-                <Card variant=\"outlined\" sx={{ mb: 2 }}>
+                <Card variant="outlined" sx={{ mb: 2 }}>
                   <CardContent>
-                    <Typography variant=\"h6\" gutterBottom>⚠️ 主要リスク評価</Typography>
+                    <Typography variant="h6" gutterBottom>⚠️ 主要リスク評価</Typography>
                     {section.content.riskAssessment?.map((risk: any, idx: number) => (
                       <Box key={idx} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1, p: 1, border: '1px solid #ddd', borderRadius: 1 }}>
-                        <Typography variant=\"body1\">{risk.risk}</Typography>
+                        <Typography variant="body1">{risk.risk}</Typography>
                         <Box>
-                          <Chip label={`確率: ${risk.probability}`} size=\"small\" color={risk.probability === '高' ? 'error' : risk.probability === '中' ? 'warning' : 'success'} sx={{ mr: 1 }} />
-                          <Chip label={`影響: ${risk.impact}`} size=\"small\" color={risk.impact === '高' ? 'error' : risk.impact === '中' ? 'warning' : 'success'} />
+                          <Chip label={`確率: ${risk.probability}`} size="small" color={risk.probability === '高' ? 'error' : risk.probability === '中' ? 'warning' : 'success'} sx={{ mr: 1 }} />
+                          <Chip label={`影響: ${risk.impact}`} size="small" color={risk.impact === '高' ? 'error' : risk.impact === '中' ? 'warning' : 'success'} />
                         </Box>
                       </Box>
                     ))}
                   </CardContent>
                 </Card>
                 
-                <Card variant=\"outlined\">
+                <Card variant="outlined">
                   <CardContent>
-                    <Typography variant=\"h6\" gutterBottom>📊 KPI監視指標</Typography>
+                    <Typography variant="h6" gutterBottom>📊 KPI監視指標</Typography>
                     <Grid container spacing={2}>
                       {section.content.monitoringKPIs?.map((kpi: any, idx: number) => (
                         <Grid item xs={12} md={6} key={idx}>
                           <Box sx={{ p: 1, border: '1px solid #ddd', borderRadius: 1 }}>
-                            <Typography variant=\"body1\"><strong>{kpi.kpi}</strong></Typography>
-                            <Typography variant=\"body2\">目標: {kpi.target} | 頻度: {kpi.frequency}</Typography>
+                            <Typography variant="body1"><strong>{kpi.kpi}</strong></Typography>
+                            <Typography variant="body2">目標: {kpi.target} | 頻度: {kpi.frequency}</Typography>
                           </Box>
                         </Grid>
                       ))}

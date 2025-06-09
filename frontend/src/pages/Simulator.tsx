@@ -24,6 +24,7 @@ import {
   Tooltip,
   LinearProgress
 } from '@mui/material'
+import DataVisualization from '../components/DataVisualization'
 import {
   TrendingUp as TrendingUpIcon,
   Save as SaveIcon,
@@ -675,6 +676,14 @@ function Simulator() {
                       : '現在の設定では赤字となります。広告予算やコストの見直しを検討してください。'
                     }
                   </Alert>
+
+                  {/* データ可視化 */}
+                  <Box sx={{ mt: 3 }}>
+                    <Typography variant="subtitle1" gutterBottom>
+                      データ可視化
+                    </Typography>
+                    <DataVisualization data={result} type="simulation" />
+                  </Box>
                 </>
               )}
             </CardContent>
