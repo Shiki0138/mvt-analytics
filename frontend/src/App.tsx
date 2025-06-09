@@ -6,6 +6,7 @@ import ProjectDetail from './pages/ProjectDetail'
 import Simulator from './pages/Simulator'
 import Analysis from './pages/Analysis'
 import Reports from './pages/Reports'
+import EnhancedAnalysis from './pages/EnhancedAnalysis'
 import Navigation from './components/Navigation'
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
               <Route path="/projects/:projectId" element={<ProjectDetail />} />
               <Route path="/simulator/:projectId?" element={<Simulator />} />
               <Route path="/analysis/:projectId?" element={<Analysis />} />
+              <Route path="/enhanced-analysis/:projectId" element={<EnhancedAnalysis />} />
               <Route path="/reports/:projectId?" element={<Reports />} />
             </Routes>
           </Container>

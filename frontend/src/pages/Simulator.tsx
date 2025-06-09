@@ -46,16 +46,44 @@ const mediaOptions = [
   { value: 'yahoo_ads', label: 'Yahoo!広告', minBudget: 30000, maxBudget: 1000000 }
 ]
 
-// 業界ごとの平均コンバージョン率
-const industryConversionRates = {
-  beauty: 0.025,
-  restaurant: 0.035,
-  retail: 0.02,
-  healthcare: 0.015,
-  education: 0.03,
-  real_estate: 0.01,
-  financial: 0.012,
-  automotive: 0.008
+// 業界・媒体別の詳細指標
+const industryChannelMetrics = {
+  beauty: {
+    label: '美容・エステ業界',
+    google_ads: { cvr: 2.8, cpc: 120, ctr: 3.2 },
+    facebook_ads: { cvr: 2.5, cpc: 85, ctr: 3.5 },
+    instagram_ads: { cvr: 3.2, cpc: 95, ctr: 4.5 },
+    line_ads: { cvr: 3.0, cpc: 140, ctr: 2.5 },
+    seo_content: { cvr: 3.5, cpc: 0, ctr: 5.5 },
+    local_promotion: { cvr: 5.5, cpc: 60, ctr: 8.0 }
+  },
+  restaurant: {
+    label: '飲食業界',
+    google_ads: { cvr: 3.5, cpc: 100, ctr: 2.8 },
+    facebook_ads: { cvr: 4.0, cpc: 75, ctr: 3.8 },
+    instagram_ads: { cvr: 3.8, cpc: 80, ctr: 4.2 },
+    line_ads: { cvr: 4.5, cpc: 130, ctr: 3.0 },
+    seo_content: { cvr: 3.2, cpc: 0, ctr: 4.8 },
+    local_promotion: { cvr: 6.5, cpc: 45, ctr: 9.0 }
+  },
+  healthcare: {
+    label: '医療・整骨院',
+    google_ads: { cvr: 2.2, cpc: 150, ctr: 2.5 },
+    facebook_ads: { cvr: 1.8, cpc: 110, ctr: 2.0 },
+    instagram_ads: { cvr: 1.5, cpc: 120, ctr: 1.8 },
+    line_ads: { cvr: 2.5, cpc: 180, ctr: 2.2 },
+    seo_content: { cvr: 4.0, cpc: 0, ctr: 6.5 },
+    local_promotion: { cvr: 5.0, cpc: 70, ctr: 7.5 }
+  },
+  fitness: {
+    label: 'フィットネス・ジム',
+    google_ads: { cvr: 2.0, cpc: 130, ctr: 3.0 },
+    facebook_ads: { cvr: 2.2, cpc: 90, ctr: 3.5 },
+    instagram_ads: { cvr: 2.8, cpc: 100, ctr: 4.0 },
+    line_ads: { cvr: 1.8, cpc: 160, ctr: 2.0 },
+    seo_content: { cvr: 2.5, cpc: 0, ctr: 4.5 },
+    local_promotion: { cvr: 3.5, cpc: 80, ctr: 6.0 }
+  }
 }
 
 interface SimulationParams {
@@ -101,6 +129,19 @@ function Simulator() {
 
   const fetchProjectData = async () => {
     try {
+      // プロジェクトIDがない場合は新規シミュレーションモード
+      if (!projectId) {
+        setProject({
+          id: 'new',
+          name: '新規シミュレーション',
+          industry_type: 'beauty',
+          target_area: '東京都',
+          description: '新規プロジェクトのシミュレーション'
+        })
+        setLoading(false)
+        return
+      }
+
       const response = await fetch(`/api/projects/${projectId}`)
       const data = await response.json()
       setProject(data)
@@ -155,6 +196,10 @@ function Simulator() {
 
   const calculateSimulation = async () => {
     setCalculating(true)
+    setError(null)
+    
+    console.log('シミュレーション開始:', params) // デバッグ用
+    
     try {
       // 実際のAPIコール
       const response = await fetch(`/api/projects/${projectId}/simulate`, {
@@ -166,31 +211,22 @@ function Simulator() {
       })
 
       if (!response.ok) {
-        throw new Error('シミュレーション計算に失敗しました')
+        const errorText = await response.text()
+        throw new Error(`シミュレーション計算に失敗しました: ${errorText}`)
       }
 
       const data = await response.json()
-      setResult(data)
-    } catch (err) {
-      // APIが実装されるまでのモックデータ
-      const totalMediaBudget = Object.values(params.media_budgets).reduce((sum, budget) => sum + budget, 0)
-      const conversionRate = industryConversionRates[project.industry_type as keyof typeof industryConversionRates] || 0.02
-      const expectedClicks = totalMediaBudget / 100 // 仮のCPC(100円)で計算
-      const expectedCustomers = Math.floor(expectedClicks * conversionRate)
-      const monthlyRevenue = expectedCustomers * params.average_customer_spend
-      const monthlyProfit = monthlyRevenue - totalMediaBudget - params.operating_costs
-      const customerAcquisitionCost = totalMediaBudget / expectedCustomers
+      console.log('API レスポンス:', data) // デバッグ用
       
-      setResult({
-        monthly_revenue: monthlyRevenue,
-        monthly_profit: monthlyProfit,
-        breakeven_months: Math.ceil(params.initial_costs / monthlyProfit),
-        roi: (monthlyProfit * 12) / (params.initial_costs + totalMediaBudget * 12) * 100,
-        customer_acquisition_cost: customerAcquisitionCost,
-        required_customers: Math.ceil(params.target_monthly_sales / params.average_customer_spend),
-        expected_customers: expectedCustomers,
-        conversion_rate: conversionRate
-      })
+      // APIレスポンス構造に合わせて調整
+      if (data.result) {
+        setResult(data.result)
+      } else {
+        setResult(data)
+      }
+    } catch (err) {
+      console.error('シミュレーションエラー:', err) // デバッグ用
+      setError(`シミュレーション実行中にエラーが発生しました: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setCalculating(false)
     }
@@ -260,11 +296,11 @@ function Simulator() {
       <Box sx={{ mb: 4 }}>
         <Button
           variant="text"
-          onClick={() => navigate(`/projects/${projectId}`)}
+          onClick={() => navigate(projectId ? `/projects/${projectId}` : '/projects')}
           startIcon={<ArrowBackIcon />}
           sx={{ mb: 2 }}
         >
-          プロジェクト詳細に戻る
+          {projectId ? 'プロジェクト詳細に戻る' : 'プロジェクト一覧に戻る'}
         </Button>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -290,17 +326,6 @@ function Simulator() {
               />
             </Stack>
           </Box>
-          <Box>
-            <Button
-              variant="contained"
-              startIcon={<SaveIcon />}
-              onClick={saveSimulation}
-              disabled={!result}
-              sx={{ mr: 1 }}
-            >
-              シミュレーションを保存
-            </Button>
-          </Box>
         </Box>
       </Box>
 
@@ -319,6 +344,26 @@ function Simulator() {
                 シミュレーション設定
               </Typography>
               <Divider sx={{ mb: 3 }} />
+
+              {/* 業界選択（新規シミュレーションの場合のみ） */}
+              {!projectId && (
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    業界選択
+                  </Typography>
+                  <FormControl fullWidth>
+                    <Select
+                      value={project.industry_type}
+                      onChange={(e) => setProject({ ...project, industry_type: e.target.value })}
+                    >
+                      <MenuItem value="beauty">美容・エステ業界</MenuItem>
+                      <MenuItem value="restaurant">飲食業界</MenuItem>
+                      <MenuItem value="healthcare">医療・整骨院</MenuItem>
+                      <MenuItem value="fitness">フィットネス・ジム</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              )}
 
               {/* 目標売上・客単価 */}
               <Box sx={{ mb: 4 }}>
@@ -352,6 +397,56 @@ function Simulator() {
                   </Grid>
                 </Grid>
               </Box>
+
+              {/* 業界指標の表示 */}
+              {project && project.industry_type && (
+                <Box sx={{ mb: 4 }}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    📊 {industryChannelMetrics[project.industry_type]?.label || project.industry_type} の業界指標
+                  </Typography>
+                  <Card variant="outlined" sx={{ p: 2, bgcolor: 'info.main', color: 'info.contrastText' }}>
+                    <Grid container spacing={2}>
+                      {params.selected_media.length > 0 ? params.selected_media.map(media => {
+                        const metrics = industryChannelMetrics[project.industry_type]?.[media]
+                        const mediaOption = mediaOptions.find(m => m.value === media)
+                        if (!metrics || !mediaOption) return null
+                        return (
+                          <Grid item xs={12} sm={6} md={4} key={media}>
+                            <Box sx={{ 
+                              textAlign: 'center', 
+                              p: 2, 
+                              border: '2px solid', 
+                              borderColor: 'primary.main', 
+                              borderRadius: 2,
+                              bgcolor: 'background.paper',
+                              color: 'text.primary'
+                            }}>
+                              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                                {mediaOption.label}
+                              </Typography>
+                              <Typography variant="h5" color="primary" gutterBottom>
+                                CVR: {metrics.cvr}%
+                              </Typography>
+                              <Typography variant="body1" color="text.secondary">
+                                CPC: ¥{metrics.cpc.toLocaleString()}
+                              </Typography>
+                              <Typography variant="body1" color="text.secondary">
+                                CTR: {metrics.ctr}%
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        )
+                      }) : (
+                        <Grid item xs={12}>
+                          <Typography variant="body1" sx={{ textAlign: 'center', py: 2, color: 'inherit' }}>
+                            広告メディアを選択すると、{industryChannelMetrics[project.industry_type]?.label || project.industry_type}の業界指標が表示されます
+                          </Typography>
+                        </Grid>
+                      )}
+                    </Grid>
+                  </Card>
+                </Box>
+              )}
 
               {/* 広告メディア選択 */}
               <Box sx={{ mb: 4 }}>

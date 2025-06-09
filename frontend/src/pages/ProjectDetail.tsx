@@ -314,13 +314,21 @@ function ProjectDetail() {
 
       {/* シミュレーションタブ */}
       <TabPanel value={tabValue} index={1}>
-        <Box sx={{ mb: 3 }}>
+        <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <Button
             variant="contained"
             startIcon={<TrendingUpIcon />}
-            onClick={() => {/* TODO: 新規シミュレーション */}}
+            onClick={() => navigate(`/simulator/${projectId}`)}
           >
-            新規シミュレーション作成
+            売上シミュレーション
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<AnalyticsIcon />}
+            onClick={() => navigate(`/enhanced-analysis/${projectId}`)}
+          >
+            🚀 AI高度分析（NEW）
           </Button>
         </Box>
 
