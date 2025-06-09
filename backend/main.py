@@ -747,11 +747,13 @@ def simulate_project(project_id: str, simulation_data: dict):
         conn.close()
         
         # 業界データベースを使用した詳細計算
+        marketing_channels = {}
         try:
             from services.industry_database import industry_db
             industry_data = industry_db.get_industry_data(industry)
             marketing_channels = industry_db.get_marketing_channels(industry)
-        except ImportError:
+        except Exception as e:
+            print(f"業界データベースエラー: {e}")
             # フォールバック: 従来のハードコードデータ
             marketing_channels = industry_channel_metrics.get(industry, industry_channel_metrics["beauty"])
         
@@ -764,12 +766,12 @@ def simulate_project(project_id: str, simulation_data: dict):
                 budget = media_budgets[media]
                 
                 # 業界・媒体固有の指標を取得
-                if 'industry_data' in locals():
-                    metrics = marketing_channels.get(media, {
-                        "cvr": 0.025, "cpc": 100, "ctr": 0.030
-                    })
+                if marketing_channels and media in marketing_channels:
+                    metrics = marketing_channels[media]
                 else:
-                    metrics = industry_channel_metrics.get(industry, {}).get(media, {
+                    # フォールバック: 従来のデータを使用
+                    fallback_data = industry_channel_metrics.get(industry, industry_channel_metrics["beauty"])
+                    metrics = fallback_data.get(media, {
                         "cvr": 0.025, "cpc": 100, "ctr": 0.030
                     })
                 

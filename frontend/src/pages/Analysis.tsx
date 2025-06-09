@@ -34,6 +34,7 @@ import {
   DialogActions,
   Autocomplete
 } from '@mui/material'
+import SimpleMapComponent from '../components/MapWithoutAPI'
 import {
   Assessment as AssessmentIcon,
   ArrowBack as ArrowBackIcon,
@@ -598,6 +599,7 @@ function Analysis() {
           <Tab label="商圏分析" />
           <Tab label="競合分析" />
           <Tab label="需要予測" />
+          <Tab label="立地マップ" />
         </Tabs>
       </Box>
 
@@ -1207,6 +1209,26 @@ function Analysis() {
                 </Typography>
               </Box>
             )}
+          </CardContent>
+        </Card>
+      </TabPanel>
+
+      {/* 立地マップタブ */}
+      <TabPanel value={tabValue} index={3}>
+        <Card>
+          <CardContent>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h6">
+                立地マップ分析
+              </Typography>
+            </Box>
+            <SimpleMapComponent 
+              onLocationSelect={(location) => {
+                console.log('選択された立地:', location)
+                // 必要に応じて立地情報を保存
+              }}
+              projectData={project}
+            />
           </CardContent>
         </Card>
       </TabPanel>
