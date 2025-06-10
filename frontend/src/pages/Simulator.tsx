@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { apiConfig } from '../config/api'
 import {
   Box,
   Container,
@@ -37,14 +38,16 @@ import {
   LocationOn as LocationOnIcon
 } from '@mui/icons-material'
 
-// 広告メディアの選択肢
+// 広告メディアの選択肢（予算範囲: 1万円〜50万円）
 const mediaOptions = [
-  { value: 'google_ads', label: 'Google広告', minBudget: 30000, maxBudget: 1000000 },
-  { value: 'facebook_ads', label: 'Facebook広告', minBudget: 20000, maxBudget: 800000 },
-  { value: 'instagram_ads', label: 'Instagram広告', minBudget: 20000, maxBudget: 800000 },
-  { value: 'line_ads', label: 'LINE広告', minBudget: 50000, maxBudget: 1500000 },
-  { value: 'twitter_ads', label: 'Twitter広告', minBudget: 30000, maxBudget: 1000000 },
-  { value: 'yahoo_ads', label: 'Yahoo!広告', minBudget: 30000, maxBudget: 1000000 }
+  { value: 'google_ads', label: 'Google広告', minBudget: 10000, maxBudget: 500000 },
+  { value: 'facebook_ads', label: 'Facebook広告', minBudget: 10000, maxBudget: 500000 },
+  { value: 'instagram_ads', label: 'Instagram広告', minBudget: 10000, maxBudget: 500000 },
+  { value: 'line_ads', label: 'LINE広告', minBudget: 15000, maxBudget: 500000 },
+  { value: 'twitter_ads', label: 'Twitter広告', minBudget: 10000, maxBudget: 500000 },
+  { value: 'yahoo_ads', label: 'Yahoo!広告', minBudget: 10000, maxBudget: 500000 },
+  { value: 'local_promotion', label: '地域密着プロモーション', minBudget: 10000, maxBudget: 200000 },
+  { value: 'seo_content', label: 'SEO・コンテンツ', minBudget: 10000, maxBudget: 300000 }
 ]
 
 // 業界・媒体別の詳細指標
@@ -118,7 +121,7 @@ function Simulator() {
     target_monthly_sales: 1000000,
     average_customer_spend: 5000,
     selected_media: ['google_ads'],
-    media_budgets: { google_ads: 50000 },
+    media_budgets: { google_ads: 30000 },
     operating_costs: 300000,
     initial_costs: 1000000
   })
@@ -143,7 +146,7 @@ function Simulator() {
         return
       }
 
-      const response = await fetch(`/api/projects/${projectId}`)
+      const response = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}`)
       const data = await response.json()
       setProject(data)
       
@@ -203,7 +206,7 @@ function Simulator() {
     
     try {
       // 実際のAPIコール
-      const response = await fetch(`/api/projects/${projectId}/simulate`, {
+      const response = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}/simulate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +238,7 @@ function Simulator() {
 
   const saveSimulation = async () => {
     try {
-      const response = await fetch(`/api/projects/${projectId}/simulations`, {
+      const response = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}/simulations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -403,14 +406,14 @@ function Simulator() {
               {project && project.industry_type && (
                 <Box sx={{ mb: 4 }}>
                   <Typography variant="subtitle1" gutterBottom>
-                    📊 {industryChannelMetrics[project.industry_type]?.label || project.industry_type} の業界指標
+                    📊 {industryChannelMetrics[project.industry_type as keyof typeof industryChannelMetrics]?.label || project.industry_type} の業界指標
                   </Typography>
                   <Card variant="outlined" sx={{ p: 2, bgcolor: 'info.main', color: 'info.contrastText' }}>
                     <Grid container spacing={2}>
                       {params.selected_media.length > 0 ? params.selected_media.map(media => {
-                        const metrics = industryChannelMetrics[project.industry_type]?.[media]
+                        const metrics = industryChannelMetrics[project.industry_type as keyof typeof industryChannelMetrics]?.[media as keyof (typeof industryChannelMetrics)[keyof typeof industryChannelMetrics]]
                         const mediaOption = mediaOptions.find(m => m.value === media)
-                        if (!metrics || !mediaOption) return null
+                        if (!metrics || !mediaOption || typeof metrics === 'string') return null
                         return (
                           <Grid item xs={12} sm={6} md={4} key={media}>
                             <Box sx={{ 
@@ -440,7 +443,7 @@ function Simulator() {
                       }) : (
                         <Grid item xs={12}>
                           <Typography variant="body1" sx={{ textAlign: 'center', py: 2, color: 'inherit' }}>
-                            広告メディアを選択すると、{industryChannelMetrics[project.industry_type]?.label || project.industry_type}の業界指標が表示されます
+                            広告メディアを選択すると、{industryChannelMetrics[project.industry_type as keyof typeof industryChannelMetrics]?.label || project.industry_type}の業界指標が表示されます
                           </Typography>
                         </Grid>
                       )}

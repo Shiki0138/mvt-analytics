@@ -24,12 +24,22 @@ import {
 } from '@mui/icons-material'
 
 interface SimpleMapComponentProps {
-  onLocationSelect?: (location: { address: string; lat?: number; lng?: number }) => void
+  center?: { lat: number; lng: number }
+  zoom?: number
+  markers?: any[]
+  selectedRadius?: number
+  showRadius?: boolean
+  onLocationSelect?: (location: { lat: number; lng: number }) => void
   projectData?: any
 }
 
 // 無料のOpenStreetMap代替案
 const SimpleMapComponent: React.FC<SimpleMapComponentProps> = ({
+  center = { lat: 35.6762, lng: 139.6503 },
+  zoom = 13,
+  markers = [],
+  selectedRadius = 1.0,
+  showRadius = true,
   onLocationSelect,
   projectData
 }) => {
@@ -117,35 +127,56 @@ const SimpleMapComponent: React.FC<SimpleMapComponentProps> = ({
       {/* 代替マップエリア */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
+          <Typography variant="h6" gutterBottom>
+            地図エリア（シンプル版）
+          </Typography>
           <Box
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect()
+              const x = e.clientX - rect.left
+              const y = e.clientY - rect.top
+              const lat = center.lat + (0.5 - y / rect.height) * 0.01
+              const lng = center.lng + (x / rect.width - 0.5) * 0.01
+              onLocationSelect?.({ lat, lng })
+              setAddress(`緯度: ${lat.toFixed(6)}, 経度: ${lng.toFixed(6)}`)
+            }}
             sx={{
               height: 300,
-              bgcolor: 'grey.100',
+              bgcolor: 'lightblue',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 1,
-              border: '2px dashed',
-              borderColor: 'grey.300'
+              border: '2px solid',
+              borderColor: 'primary.main',
+              cursor: 'crosshair',
+              position: 'relative',
+              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
             }}
           >
             <Stack alignItems="center" spacing={2}>
-              <LocationIcon sx={{ fontSize: 48, color: 'grey.500' }} />
-              <Typography variant="h6" color="grey.600">
-                地図エリア（Google Maps API実装予定）
+              <LocationIcon sx={{ fontSize: 48, color: 'primary.main' }} />
+              <Typography variant="h6" color="primary.main">
+                📍 クリックして位置を選択
               </Typography>
-              <Typography variant="body2" color="grey.500" textAlign="center">
-                住所を検索すると、この位置に詳細なマップが表示されます
+              <Typography variant="body2" color="grey.600" textAlign="center">
+                この地図エリアをクリックして商圏の中心地を設定
                 <br />
-                競合店舗・人口統計・交通アクセスなどを可視化
+                選択した位置: 緯度 {center.lat.toFixed(4)}, 経度 {center.lng.toFixed(4)}
+                <br />
+                商圏半径: {selectedRadius}km
               </Typography>
-              <Button
-                variant="outlined"
-                startIcon={<InfoIcon />}
-                onClick={() => setAnalysisOpen(true)}
-              >
-                実装予定機能を見る
-              </Button>
+              {showRadius && (
+                <Box sx={{ 
+                  position: 'absolute',
+                  width: `${selectedRadius * 60}px`,
+                  height: `${selectedRadius * 60}px`,
+                  border: '2px dashed red',
+                  borderRadius: '50%',
+                  pointerEvents: 'none'
+                }} />
+              )}
             </Stack>
           </Box>
         </CardContent>
@@ -225,7 +256,7 @@ const SimpleMapComponent: React.FC<SimpleMapComponentProps> = ({
                   {Object.entries(selectedLocation.area_analysis.demographics).map(([age, percent]) => (
                     <Grid item xs={6} key={age}>
                       <Typography variant="body2">
-                        {age}: {percent}
+                        {age}: {String(percent)}
                       </Typography>
                     </Grid>
                   ))}

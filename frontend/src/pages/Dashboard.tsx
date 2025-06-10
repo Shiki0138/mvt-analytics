@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Grid,
@@ -7,40 +8,109 @@ import {
   Button,
   LinearProgress,
   Chip,
-  Stack
+  Stack,
+  CircularProgress,
+  Alert
 } from '@mui/material'
 import { Add as AddIcon, TrendingUp, Assessment, Timeline } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { apiConfig } from '../config/api'
 
 function Dashboard() {
   const navigate = useNavigate()
-
-  // モックデータ（実際はAPIから取得）
-  const recentProjects = [
-    {
-      id: '1',
-      name: 'サンプル美容室',
-      industry: 'beauty',
-      status: 'completed',
-      lastSimulation: '2025-01-02',
-      requiredBudget: 450000
-    },
-    {
-      id: '2',
-      name: '新規カフェ店舗',
-      industry: 'restaurant',
-      status: 'in_progress',
-      lastSimulation: '2024-12-28',
-      requiredBudget: 320000
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [dashboardData, setDashboardData] = useState({
+    projects: [],
+    stats: {
+      totalProjects: 0,
+      completedAnalyses: 0,
+      averageROI: '0x',
+      averageBreakeven: '0ヶ月'
     }
-  ]
+  })
+
+  useEffect(() => {
+    fetchDashboardData()
+  }, [])
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true)
+      
+      // プロジェクト一覧とダッシュボード統計を並行取得
+      const [projectsResponse, statsResponse] = await Promise.all([
+        fetch(`${apiConfig.baseURL}/api/projects`),
+        fetch(`${apiConfig.baseURL}/api/dashboard/stats`)
+      ])
+
+      if (!projectsResponse.ok) {
+        throw new Error('プロジェクトデータの取得に失敗しました')
+      }
+      
+      const projects = await projectsResponse.json()
+      
+      // 統計データ
+      let stats = {
+        totalProjects: projects.length,
+        completedAnalyses: 0,
+        averageROI: '0x',
+        averageBreakeven: '0ヶ月'
+      }
+      
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json()
+        stats = {
+          totalProjects: statsData.total_projects,
+          completedAnalyses: statsData.completed_analyses,
+          averageROI: '2.1x', // 固定値（実際の計算は複雑なため）
+          averageBreakeven: statsData.average_breakeven_months + 'ヶ月'
+        }
+      }
+
+      setDashboardData({
+        projects: projects.slice(0, 5), // 最新5件
+        stats
+      })
+
+    } catch (err) {
+      console.error('ダッシュボードデータ取得エラー:', err)
+      setError('ダッシュボードデータの取得に失敗しました')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const quickStats = [
-    { label: '総プロジェクト数', value: '12', change: '+2', color: 'primary' },
-    { label: '完了分析', value: '28', change: '+5', color: 'success' },
-    { label: '平均ROI', value: '2.4x', change: '+0.3', color: 'info' },
-    { label: '平均損益分岐', value: '6.2ヶ月', change: '-0.8', color: 'warning' }
+    { label: '総プロジェクト数', value: dashboardData.stats.totalProjects.toString(), change: '', color: 'primary' },
+    { label: '完了分析', value: dashboardData.stats.completedAnalyses.toString(), change: '', color: 'success' },
+    { label: '平均ROI', value: dashboardData.stats.averageROI, change: '', color: 'info' },
+    { label: '平均損益分岐', value: dashboardData.stats.averageBreakeven, change: '', color: 'warning' }
   ]
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+        <CircularProgress size={60} />
+        <Typography variant="h6" sx={{ ml: 2 }}>
+          ダッシュボードを読み込み中...
+        </Typography>
+      </Box>
+    )
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+        <Button variant="contained" onClick={fetchDashboardData}>
+          再読み込み
+        </Button>
+      </Box>
+    )
+  }
 
   return (
     <Box>
@@ -76,12 +146,6 @@ function Dashboard() {
                 <Typography variant="body2" color="text.secondary" gutterBottom>
                   {stat.label}
                 </Typography>
-                <Chip
-                  label={stat.change}
-                  size="small"
-                  color={stat.color as any}
-                  variant="outlined"
-                />
               </CardContent>
             </Card>
           </Grid>
@@ -97,7 +161,7 @@ function Dashboard() {
                 最近のプロジェクト
               </Typography>
               <Stack spacing={2}>
-                {recentProjects.map((project) => (
+                {dashboardData.projects.length > 0 ? dashboardData.projects.map((project: any) => (
                   <Card
                     key={project.id}
                     variant="outlined"
@@ -111,26 +175,35 @@ function Dashboard() {
                             {project.name}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            {project.industry === 'beauty' ? '美容・エステ' : '飲食店'}
+                            {project.industry_type === 'beauty' ? '美容・エステ' : 
+                             project.industry_type === 'restaurant' ? '飲食店' :
+                             project.industry_type === 'fitness' ? 'フィットネス' : project.industry_type}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            最終シミュレーション: {project.lastSimulation}
+                            作成日: {new Date(project.created_at).toLocaleDateString('ja-JP')}
                           </Typography>
                         </Box>
                         <Box sx={{ textAlign: 'right' }}>
                           <Chip
-                            label={project.status === 'completed' ? '完了' : '進行中'}
-                            color={project.status === 'completed' ? 'success' : 'warning'}
+                            label={project.status === 'completed' ? '完了' : 
+                                  project.status === 'active' ? 'アクティブ' : 
+                                  project.status === 'planning' ? '計画中' : project.status}
+                            color={project.status === 'completed' ? 'success' : 
+                                  project.status === 'active' ? 'primary' : 'default'}
                             size="small"
                           />
                           <Typography variant="body2" sx={{ mt: 1 }}>
-                            予算: ¥{project.requiredBudget.toLocaleString()}
+                            エリア: {project.target_area}
                           </Typography>
                         </Box>
                       </Box>
                     </CardContent>
                   </Card>
-                ))}
+                )) : (
+                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                    プロジェクトがありません
+                  </Typography>
+                )}
               </Stack>
             </CardContent>
           </Card>

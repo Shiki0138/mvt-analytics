@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { apiConfig } from '../config/api'
 import {
   Box,
   Typography,
@@ -120,13 +121,13 @@ function Reports() {
   const fetchProjectData = async () => {
     try {
       if (projectId) {
-        const response = await fetch(`/api/projects/${projectId}`)
+        const response = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}`)
         const data = await response.json()
         setProject(data)
 
         // 分析データも取得（失敗してもモックデータで補完）
         try {
-          const analysisResponse = await fetch(`/api/projects/${projectId}/analyses`)
+          const analysisResponse = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}/analyses`)
           const analysisResult = await analysisResponse.json()
           setAnalysisData(analysisResult.results || {})
         } catch (err) {
@@ -159,7 +160,7 @@ function Reports() {
 
         // シミュレーションデータも取得
         try {
-          const simulationResponse = await fetch(`/api/projects/${projectId}/simulations/latest`)
+          const simulationResponse = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}/simulations/latest`)
           const simulationResult = await simulationResponse.json()
           setSimulationData(simulationResult)
         } catch (err) {
@@ -727,7 +728,7 @@ function Reports() {
       healthcare: ["専門資格", "最新設備", "アフターケア"],
       fitness: ["パーソナル指導", "最新マシン", "栄養指導"]
     }
-    return advantages[industry] || advantages.beauty
+    return advantages[industry as keyof typeof advantages] || advantages.beauty
   }
 
   const getMarketGap = () => {

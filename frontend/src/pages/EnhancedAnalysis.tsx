@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { apiConfig } from '../config/api'
 import {
   Box,
   Container,
@@ -147,7 +148,7 @@ function EnhancedAnalysis() {
 
   const fetchProjectData = async () => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`)
+      const response = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}`)
       const data = await response.json()
       setProject(data)
       

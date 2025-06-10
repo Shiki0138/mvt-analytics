@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { apiConfig } from '../config/api'
 import {
   Box,
   Container,
@@ -69,20 +70,42 @@ function ProjectDetail() {
 
   const fetchProjectData = async () => {
     try {
+      console.log('プロジェクト詳細取得開始:', projectId)
+      
       // プロジェクト基本情報の取得
-      const projectResponse = await fetch(`/api/projects/${projectId}`)
+      const projectResponse = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}`)
+      console.log('プロジェクト取得レスポンス:', projectResponse.status)
+      
+      if (!projectResponse.ok) {
+        throw new Error(`プロジェクト取得失敗: ${projectResponse.status}`)
+      }
+      
       const projectData = await projectResponse.json()
+      console.log('プロジェクトデータ:', projectData)
       setProject(projectData)
 
       // シミュレーションデータの取得
-      const simulationsResponse = await fetch(`/api/projects/${projectId}/simulations`)
-      const simulationsData = await simulationsResponse.json()
-      setSimulations(simulationsData.simulations || [])
+      try {
+        const simulationsResponse = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}/simulations`)
+        if (simulationsResponse.ok) {
+          const simulationsData = await simulationsResponse.json()
+          setSimulations(simulationsData.simulations || [])
+        }
+      } catch (err) {
+        console.warn('シミュレーションデータ取得失敗:', err)
+      }
 
       // 分析データの取得
-      const analysesResponse = await fetch(`/api/projects/${projectId}/analyses`)
-      const analysesData = await analysesResponse.json()
-      setAnalyses(analysesData.analyses || [])
+      try {
+        const analysesResponse = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}/analyses`)
+        if (analysesResponse.ok) {
+          const analysesData = await analysesResponse.json()
+          setAnalyses(analysesData.analyses || [])
+        }
+      } catch (err) {
+        console.warn('分析データ取得失敗:', err)
+      }
+      
     } catch (error) {
       console.error('データ取得エラー:', error)
     } finally {

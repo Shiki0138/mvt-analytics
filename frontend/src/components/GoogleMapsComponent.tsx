@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { Loader } from '@googlemaps/js-api-loader'
+import { GOOGLE_MAPS_API_KEY } from '../config/api'
+import { japanPrefectures, findPrefectureByName, findCityByName, type Prefecture, type City } from '../data/japanRegions'
 import {
   Box,
   Card,
@@ -73,7 +76,7 @@ interface LayerConfig {
 }
 
 const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
-  center = { lat: 35.6762, lng: 139.6503 }, // 東京駅
+  center = { lat: 35.6762, lng: 139.6503 }, // 東京駅（デフォルト）
   zoom = 13,
   height = 400,
   width = '100%',
@@ -93,6 +96,10 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
   const [searchAddress, setSearchAddress] = useState('')
   const [layersOpen, setLayersOpen] = useState(false)
   const [catchmentRadius, setCatchmentRadius] = useState(1000) // メートル
+  const [selectedPrefecture, setSelectedPrefecture] = useState<Prefecture | null>(null)
+  const [selectedCity, setSelectedCity] = useState<City | null>(null)
+  const [regionPickerOpen, setRegionPickerOpen] = useState(false)
+  const [currentCenter, setCurrentCenter] = useState(center)
   
   const [layers, setLayers] = useState<LayerConfig>({
     competitors: showCompetitors,
@@ -104,7 +111,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
 
   // Google Maps API読み込み
   useEffect(() => {
-    const loadGoogleMapsAPI = () => {
+    const loadGoogleMapsAPI = async () => {
       // 既に読み込み済みの場合
       if (window.google && window.google.maps) {
         setIsLoaded(true)
@@ -112,23 +119,28 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
         return
       }
 
-      // Google Maps APIスクリプトを動的に読み込み
-      const script = document.createElement('script')
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY'}&libraries=places,geometry,visualization`
-      script.async = true
-      script.defer = true
-      
-      script.onload = () => {
+      if (!GOOGLE_MAPS_API_KEY) {
+        setError('Google Maps API キーが設定されていません（環境変数VITE_GOOGLE_MAPS_API_KEYを確認してください）')
+        setLoading(false)
+        return
+      }
+
+      console.log('🔑 Google Maps API キー設定確認済み')
+
+      try {
+        const loader = new Loader({
+          apiKey: GOOGLE_MAPS_API_KEY,
+          version: 'weekly',
+          libraries: ['places', 'geometry', 'visualization']
+        })
+
+        await loader.load()
         setIsLoaded(true)
         setLoading(false)
-      }
-      
-      script.onerror = () => {
+      } catch (error) {
         setError('Google Maps APIの読み込みに失敗しました')
         setLoading(false)
       }
-
-      document.head.appendChild(script)
     }
 
     loadGoogleMapsAPI()
@@ -189,30 +201,49 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
     if (!googleMapRef.current) return
 
     try {
-      // モックデータ：実際の実装では API から取得
-      const mockCompetitors = [
-        {
-          id: 'comp-1',
-          position: { lat: 35.6785, lng: 139.6551 },
-          title: '競合店A',
-          type: 'competitor' as const,
-          data: { name: '美容室ABC', rating: 4.2, reviews: 145 }
-        },
-        {
-          id: 'comp-2', 
-          position: { lat: 35.6745, lng: 139.6485 },
-          title: '競合店B',
-          type: 'competitor' as const,
-          data: { name: 'ヘアサロンXYZ', rating: 4.0, reviews: 89 }
-        }
-      ]
+      // 地域別競合店舗データ生成
+      const generateRegionalCompetitors = () => {
+        const baseCompetitors = [
+          { type: 'beauty', names: ['美容室', 'ヘアサロン', 'ビューティーサロン'] },
+          { type: 'restaurant', names: ['レストラン', 'カフェ', '居酒屋'] },
+          { type: 'fitness', names: ['フィットネス', 'ジム', 'ヨガスタジオ'] },
+          { type: 'retail', names: ['コンビニ', '薬局', 'スーパー'] }
+        ]
+
+        return baseCompetitors.flatMap((category, categoryIndex) => {
+          return Array.from({ length: 2 }, (_, i) => {
+            const angle = (categoryIndex * 90 + i * 45) * (Math.PI / 180)
+            const distance = 0.005 + Math.random() * 0.01 // 500m-1.5km範囲
+            
+            return {
+              id: `comp-${categoryIndex}-${i}`,
+              position: {
+                lat: currentCenter.lat + Math.cos(angle) * distance,
+                lng: currentCenter.lng + Math.sin(angle) * distance
+              },
+              title: `${category.names[i % category.names.length]}${String.fromCharCode(65 + i)}`,
+              type: 'competitor' as const,
+              data: { 
+                name: `${category.names[i % category.names.length]}${String.fromCharCode(65 + i)}`,
+                category: category.type,
+                rating: 3.5 + Math.random() * 1.0,
+                reviews: Math.floor(50 + Math.random() * 200),
+                prefecture: selectedPrefecture?.name || '東京都',
+                city: selectedCity?.name || '千代田区'
+              }
+            }
+          })
+        })
+      }
+
+      const regionalCompetitors = generateRegionalCompetitors()
 
       if (layers.competitors) {
-        addCompetitorMarkers(mockCompetitors)
+        addCompetitorMarkers(regionalCompetitors)
       }
 
       if (layers.catchmentArea) {
-        drawCatchmentArea(center, catchmentRadius)
+        drawCatchmentArea(currentCenter, catchmentRadius)
       }
 
       if (layers.demographics) {
@@ -244,10 +275,12 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
       // 情報ウィンドウ
       const infoWindow = new window.google.maps.InfoWindow({
         content: `
-          <div style="max-width: 200px;">
+          <div style="max-width: 250px;">
             <h4>${competitor.data?.name}</h4>
-            <p>評価: ⭐ ${competitor.data?.rating} (${competitor.data?.reviews}件)</p>
-            <p>競合店舗</p>
+            <p>評価: ⭐ ${competitor.data?.rating?.toFixed(1)} (${competitor.data?.reviews}件)</p>
+            <p>業種: ${competitor.data?.category}</p>
+            <p>地域: ${competitor.data?.prefecture} ${competitor.data?.city}</p>
+            <small style="color: #666;">競合店舗</small>
           </div>
         `
       })
@@ -274,18 +307,68 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
 
   // 人口統計データ読み込み
   const loadDemographicsData = () => {
-    // ヒートマップレイヤー（人口密度）
-    const heatmapData = [
-      new window.google.maps.LatLng(35.6762, 139.6503),
-      new window.google.maps.LatLng(35.6785, 139.6551),
-      new window.google.maps.LatLng(35.6745, 139.6485)
-    ]
+    // 地域別人口密度データ生成
+    const generateRegionalHeatmapData = () => {
+      const basePopulationDensity = selectedCity?.population || 100000
+      const points: any[] = []
+      
+      // 中心点周辺に人口密度に応じてデータポイント生成
+      for (let i = 0; i < 20; i++) {
+        const angle = (i * 18) * (Math.PI / 180) // 18度ずつ
+        const distance = 0.002 + Math.random() * 0.008 // 200m-1km範囲
+        const weight = Math.max(0.1, (basePopulationDensity / 500000) + Math.random() * 0.5)
+        
+        points.push({
+          location: new window.google.maps.LatLng(
+            currentCenter.lat + Math.cos(angle) * distance,
+            currentCenter.lng + Math.sin(angle) * distance
+          ),
+          weight: weight
+        })
+      }
+
+      // 商業地域の高密度ポイント追加
+      if (selectedPrefecture) {
+        const commercialAreas = [
+          { lat: currentCenter.lat + 0.003, lng: currentCenter.lng + 0.002, weight: 0.8 },
+          { lat: currentCenter.lat - 0.002, lng: currentCenter.lng + 0.004, weight: 0.6 },
+          { lat: currentCenter.lat + 0.001, lng: currentCenter.lng - 0.003, weight: 0.7 }
+        ]
+
+        commercialAreas.forEach(area => {
+          points.push({
+            location: new window.google.maps.LatLng(area.lat, area.lng),
+            weight: area.weight
+          })
+        })
+      }
+
+      return points
+    }
+
+    const heatmapData = generateRegionalHeatmapData()
 
     new window.google.maps.visualization.HeatmapLayer({
       data: heatmapData,
       map: googleMapRef.current,
-      radius: 50,
-      opacity: 0.6
+      radius: 40,
+      opacity: 0.6,
+      gradient: [
+        'rgba(0, 255, 255, 0)',
+        'rgba(0, 255, 255, 1)',
+        'rgba(0, 191, 255, 1)',
+        'rgba(0, 127, 255, 1)',
+        'rgba(0, 63, 255, 1)',
+        'rgba(0, 0, 255, 1)',
+        'rgba(0, 0, 223, 1)',
+        'rgba(0, 0, 191, 1)',
+        'rgba(0, 0, 159, 1)',
+        'rgba(0, 0, 127, 1)',
+        'rgba(63, 0, 91, 1)',
+        'rgba(127, 0, 63, 1)',
+        'rgba(191, 0, 31, 1)',
+        'rgba(255, 0, 0, 1)'
+      ]
     })
   }
 
@@ -339,6 +422,27 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
     }))
   }
 
+  // 都道府県選択
+  const handlePrefectureChange = (prefecture: Prefecture) => {
+    setSelectedPrefecture(prefecture)
+    setSelectedCity(null)
+    setCurrentCenter(prefecture.center)
+    if (googleMapRef.current) {
+      googleMapRef.current.setCenter(prefecture.center)
+      googleMapRef.current.setZoom(prefecture.zoom)
+    }
+  }
+
+  // 市町村選択
+  const handleCityChange = (city: City) => {
+    setSelectedCity(city)
+    setCurrentCenter(city.center)
+    if (googleMapRef.current) {
+      googleMapRef.current.setCenter(city.center)
+      googleMapRef.current.setZoom(city.zoom)
+    }
+  }
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height={height}>
@@ -358,7 +462,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
         <Typography variant="caption">
           注意: Google Maps API キーが必要です。
           <br />
-          環境変数 REACT_APP_GOOGLE_MAPS_API_KEY を設定してください。
+          環境変数 VITE_GOOGLE_MAPS_API_KEY を設定してください。
         </Typography>
       </Alert>
     )
@@ -410,6 +514,16 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
               >
                 <MyLocationIcon />
               </Fab>
+            </Tooltip>
+            <Tooltip title="地域選択">
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<LocationIcon />}
+                onClick={() => setRegionPickerOpen(true)}
+              >
+                {selectedCity ? selectedCity.name : selectedPrefecture ? selectedPrefecture.name : '地域選択'}
+              </Button>
             </Tooltip>
           </Stack>
         </CardContent>
@@ -535,6 +649,115 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
             }}
           >
             適用
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* 地域選択ダイアログ */}
+      <Dialog
+        open={regionPickerOpen}
+        onClose={() => setRegionPickerOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>地域選択</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={3}>
+            {/* 都道府県選択 */}
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                都道府県
+              </Typography>
+              <FormControl fullWidth>
+                <InputLabel>都道府県を選択</InputLabel>
+                <Select
+                  value={selectedPrefecture?.code || ''}
+                  onChange={(e) => {
+                    const prefecture = japanPrefectures.find(p => p.code === e.target.value)
+                    if (prefecture) handlePrefectureChange(prefecture)
+                  }}
+                >
+                  {japanPrefectures.map((prefecture) => (
+                    <MenuItem key={prefecture.code} value={prefecture.code}>
+                      {prefecture.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* 市町村選択 */}
+            <Grid item xs={12} md={6}>
+              <Typography variant="h6" gutterBottom>
+                市町村
+              </Typography>
+              <FormControl fullWidth disabled={!selectedPrefecture}>
+                <InputLabel>市町村を選択</InputLabel>
+                <Select
+                  value={selectedCity?.code || ''}
+                  onChange={(e) => {
+                    const city = selectedPrefecture?.cities.find(c => c.code === e.target.value)
+                    if (city) handleCityChange(city)
+                  }}
+                >
+                  {selectedPrefecture?.cities.map((city) => (
+                    <MenuItem key={city.code} value={city.code}>
+                      {city.name}
+                      {city.population && (
+                        <Typography variant="caption" sx={{ ml: 1, color: 'text.secondary' }}>
+                          (人口: {city.population.toLocaleString()}人)
+                        </Typography>
+                      )}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* 地域ブロック別クイック選択 */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                地域ブロック別クイック選択
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                {Object.entries({
+                  '北海道': ['北海道'],
+                  '東北': ['青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県'],
+                  '関東': ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県'],
+                  '中部': ['新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県'],
+                  '近畿': ['三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県'],
+                  '中国': ['鳥取県', '島根県', '岡山県', '広島県', '山口県'],
+                  '四国': ['徳島県', '香川県', '愛媛県', '高知県'],
+                  '九州': ['福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県']
+                }).map(([region, prefectures]) => (
+                  <Chip
+                    key={region}
+                    label={region}
+                    variant="outlined"
+                    clickable
+                    onClick={() => {
+                      const firstPref = japanPrefectures.find(p => prefectures.includes(p.name))
+                      if (firstPref) handlePrefectureChange(firstPref)
+                    }}
+                  />
+                ))}
+              </Stack>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setRegionPickerOpen(false)}>閉じる</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setRegionPickerOpen(false)
+              if (selectedCity || selectedPrefecture) {
+                loadInitialData() // 地域データ再読み込み
+              }
+            }}
+            disabled={!selectedPrefecture}
+          >
+            この地域に移動
           </Button>
         </DialogActions>
       </Dialog>

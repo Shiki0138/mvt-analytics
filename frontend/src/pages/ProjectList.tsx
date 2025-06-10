@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiConfig } from '../config/api'
 import {
   Box,
   Typography,
@@ -25,7 +26,8 @@ import {
   LinearProgress,
   Alert,
   CircularProgress,
-  Container
+  Container,
+  InputAdornment
 } from '@mui/material'
 import {
   Add as AddIcon,
@@ -126,12 +128,16 @@ function ProjectList() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('/api/projects')
+      console.log('プロジェクト取得開始:', `${apiConfig.baseURL}/api/projects`)
+      const response = await fetch(`${apiConfig.baseURL}/api/projects`)
+      console.log('レスポンス状況:', response.status, response.statusText)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('プロジェクトデータ取得成功:', data.length + '件')
         setProjects(data)
       } else {
-        console.error('プロジェクト取得エラー')
+        console.error('プロジェクト取得エラー:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('プロジェクト取得エラー:', error)
@@ -188,23 +194,36 @@ function ProjectList() {
   // プロジェクト作成/更新
   const handleSubmitProject = async () => {
     try {
-      const url = editingProject ? `/api/projects/${editingProject.id}` : '/api/projects'
+      const url = editingProject ? `${apiConfig.baseURL}/api/projects/${editingProject.id}` : `${apiConfig.baseURL}/api/projects`
       const method = editingProject ? 'PUT' : 'POST'
+      
+      // status フィールドを追加
+      const projectData = {
+        ...formData,
+        status: editingProject ? editingProject.status : 'active'
+      }
+      
+      console.log('プロジェクト送信データ:', projectData)
       
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(projectData)
       })
       
       if (response.ok) {
+        const result = await response.json()
+        console.log('プロジェクト作成/更新成功:', result)
         await fetchProjects()
         handleCloseDialog()
       } else {
-        console.error('プロジェクト保存エラー')
+        const errorText = await response.text()
+        console.error('プロジェクト保存エラー:', response.status, errorText)
+        alert(`プロジェクト保存に失敗しました: ${response.status} ${errorText}`)
       }
     } catch (error) {
       console.error('プロジェクト保存エラー:', error)
+      alert(`プロジェクト保存エラー: ${error}`)
     }
   }
 
@@ -213,7 +232,7 @@ function ProjectList() {
     if (!window.confirm('このプロジェクトを削除しますか？')) return
     
     try {
-      const response = await fetch(`/api/projects/${projectId}`, {
+      const response = await fetch(`${apiConfig.baseURL}/api/projects/${projectId}`, {
         method: 'DELETE'
       })
       
