@@ -56,6 +56,9 @@ interface GoogleMapsComponentProps {
   showCompetitors?: boolean
   showDemographics?: boolean
   showCatchmentArea?: boolean
+  catchmentRadius?: number
+  showSearch?: boolean
+  showRegionSelector?: boolean
   projectData?: any
 }
 

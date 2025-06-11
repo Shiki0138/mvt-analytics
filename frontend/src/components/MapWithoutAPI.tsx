@@ -82,11 +82,7 @@ const SimpleMapComponent: React.FC<SimpleMapComponentProps> = ({
 
     setSelectedLocation(mockData)
     setMockAnalysis(mockData)
-    onLocationSelect?.({
-      address: address,
-      lat: mockData.estimated_location.lat,
-      lng: mockData.estimated_location.lng
-    })
+    onLocationSelect?.(mockData.estimated_location)
   }
 
   const handleSearch = () => {
