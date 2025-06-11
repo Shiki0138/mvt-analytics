@@ -87,6 +87,9 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
   showCompetitors = true,
   showDemographics = true,
   showCatchmentArea = true,
+  catchmentRadius = 1.0,
+  showSearch = true,
+  showRegionSelector = true,
   projectData
 }) => {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -98,7 +101,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
   const [selectedLocation, setSelectedLocation] = useState<any>(null)
   const [searchAddress, setSearchAddress] = useState('')
   const [layersOpen, setLayersOpen] = useState(false)
-  const [catchmentRadius, setCatchmentRadius] = useState(1000) // メートル
+  const [catchmentRadiusState, setCatchmentRadiusState] = useState(catchmentRadius * 1000) // プロパティのkmをメートルに変換
   const [selectedPrefecture, setSelectedPrefecture] = useState<Prefecture | null>(null)
   const [selectedCity, setSelectedCity] = useState<City | null>(null)
   const [regionPickerOpen, setRegionPickerOpen] = useState(false)
@@ -623,11 +626,11 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({
             {layers.catchmentArea && (
               <Box>
                 <Typography gutterBottom>
-                  商圏半径: {catchmentRadius}m
+                  商圏半径: {catchmentRadiusState}m
                 </Typography>
                 <Slider
-                  value={catchmentRadius}
-                  onChange={(_, value) => setCatchmentRadius(value as number)}
+                  value={catchmentRadiusState}
+                  onChange={(_, value) => setCatchmentRadiusState(value as number)}
                   min={500}
                   max={3000}
                   step={100}
