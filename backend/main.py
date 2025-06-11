@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
@@ -17,7 +17,7 @@ app = FastAPI(title="MVT Analytics API", version="1.0.0")
 # CORS設定
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://localhost:8080"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -213,6 +213,51 @@ def read_root():
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "mvt-analytics", "timestamp": datetime.now().isoformat()}
+
+@app.get("/api/dashboard/stats")
+def get_dashboard_stats():
+    """ダッシュボード統計データ取得"""
+    try:
+        conn = sqlite3.connect('mvt_analytics.db')
+        cursor = conn.cursor()
+        
+        # プロジェクト数
+        cursor.execute("SELECT COUNT(*) FROM projects")
+        total_projects = cursor.fetchone()[0]
+        
+        # アクティブプロジェクト数
+        cursor.execute("SELECT COUNT(*) FROM projects WHERE status = 'active'")
+        active_projects = cursor.fetchone()[0]
+        
+        # レポート数（analyses テーブルの代わりに reports テーブルを使用）
+        cursor.execute("SELECT COUNT(*) FROM reports")
+        total_analyses = cursor.fetchone()[0]
+        
+        # 平均損益分岐月数（モックデータを使用、実際のテーブルがないため）
+        avg_breakeven = 8.5  # デフォルト値
+        
+        # 実際のシミュレーションデータがある場合は別途取得
+        # 将来的に sales_simulations テーブルが作成された場合に対応
+        try:
+            cursor.execute("SELECT AVG(breakeven_months) FROM sales_simulations WHERE breakeven_months IS NOT NULL")
+            avg_breakeven_result = cursor.fetchone()[0]
+            if avg_breakeven_result:
+                avg_breakeven = round(avg_breakeven_result, 1)
+        except sqlite3.OperationalError:
+            # テーブルが存在しない場合はデフォルト値を使用
+            pass
+        
+        conn.close()
+        
+        return {
+            "total_projects": total_projects,
+            "completed_analyses": total_analyses,
+            "active_projects": active_projects,
+            "average_breakeven_months": avg_breakeven
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"統計データ取得エラー: {str(e)}")
 
 # プロジェクト API（完全版）
 @app.get("/api/projects")
